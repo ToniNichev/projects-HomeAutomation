@@ -1,0 +1,76 @@
+.weatherTitle {
+  background: #7983e4;
+  color: #dbd0d0;
+  text-align: center;
+  
+  padding: 10px;
+
+  span {
+    font-family: DigitalDisplay;
+    font-size: 22px;
+    color: white;
+  }
+
+  img {
+    width: 35px;
+  }
+}
+
+.wrapper {
+  background: rgb(243, 243, 247);
+  color: black;
+
+  .roomName {
+    
+  }
+
+  .flagWrapper {
+    border: 5px solid silver;
+    padding: 40px;
+  }
+
+  .flagWrapperError {
+    //`border: 5px solid red;
+    background: rgb(211, 198, 198);
+    padding: 40px;
+  }
+
+  .fanModeText {
+    font-size:13px;
+  }
+} 
+
+
+
+.leftRail {
+  text-align: left;
+}
+
+.rightRail {
+  display: flex;
+  button {
+    width: 100%;
+    padding: 5px;
+    cursor: pointer;
+  }
+}
+
+button {
+  border-radius: 5px;  
+  margin-bottom: 5px;
+}
+
+button:hover {
+  border-radius: 5px;
+  background-color: darkgray;
+  color: white;
+  font-weight: 800;
+}
+
+.addButtonVisible {
+  border-radius: 5px;
+}
+
+.addButtonHidden {
+  display: none;
+}

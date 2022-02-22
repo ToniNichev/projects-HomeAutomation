@@ -1,0 +1,31 @@
+
+
+import React, { Component, useEffect, useState } from 'react';
+import styles from './styles.scss';
+
+let ls = [];
+
+for(let i=0;i < 20450; i ++) {
+  ls.push(i);
+}
+
+const AboutContainer = () => {
+
+  useEffect(() => {
+    const endTime = new Date();
+    const benchmark = parseFloat( (endTime.getTime() - startTime.getTime()) * 0.001 ).toFixed(2);
+    alert(`Download time:   ${benchmark} sec`);
+  });  
+
+  return (
+    <div className={styles.wrapper}>
+      {ls.map( (i) => (
+      <div className={styles.element}>
+        ${i} Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
+      </div>) )}      
+      <div className={styles.footer}>END</div>
+    </div>
+  );
+}
+
+export default AboutContainer;

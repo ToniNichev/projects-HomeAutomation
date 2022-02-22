@@ -1,0 +1,46 @@
+@font-face {
+  font-family: 'DigitalDisplay';
+  src:  url('../../fonts/digital-display.ttf') format('truetype');
+  font-weight: 600;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'RobotoLight';
+  src:  url('../../fonts/Roboto/Roboto-Light.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'RobotoBlack';
+  src:  url('../../fonts/Roboto/Roboto-Black.ttf') format('truetype');
+}
+
+.appWrapper {
+  background:#ecf0f1;  
+  color: white;
+  text-align: center;
+  font-family: RobotoLight;
+}
+
+body {
+  overflow-x: hidden;
+}
+
+/* global css styles */
+
+*, *:before, *:after {
+  border: 0;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  outline: 0;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+input {
+  -webkit-user-select: text;
+  user-select: text;
+}

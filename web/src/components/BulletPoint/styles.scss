@@ -1,0 +1,32 @@
+.flagBulet {
+    height: 10px;
+    width: 10px;
+    border: 1px solid silver;
+    border-radius: 50%;
+    display: inline-block;
+    background: #7983e4;
+  }
+  
+  .flagBuletEditable {
+    height: 15px;
+    width: 15px;
+    background-color: none;
+    border: 1px solid black;
+    border-radius: 50%;
+    display: inline-block;
+    cursor: pointer;
+  }
+  
+  .flagBuletSelected {
+    height: 15px;
+    width: 15px;
+    background-color: red;
+    border-radius: 50%;
+    display: inline-block;
+    cursor: pointer;
+    border: 1px solid black;
+  }
+
+  .spacing {
+      padding-right:5px;
+  }
