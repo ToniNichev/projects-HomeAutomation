@@ -1,7 +1,7 @@
 
 import mongoDB  from'../connectors/database/mongodb';
 
-const thermostatCollectionName = 'thermostat';
+const devicesCollectionName = 'devices';
 const usersCollectionName = 'users';
 const hubsCollectionName = 'hubs';
 
@@ -22,21 +22,21 @@ export default {
     },     
 
     // #######################################
-    // Thermostat functions
+    // Devices functions
     // #######################################
-    getAllThermostats: async () => {
-      const result = await mongoDB.find({}, thermostatCollectionName);
+    getAllDevices: async () => {
+      const result = await mongoDB.find({}, devicesCollectionName);
       return result;
     }, 
 
-    getThermostatsBySearchTerm: async (searchObject) => {
-      const result = await mongoDB.find(searchObject, thermostatCollectionName);
+    getDevicesBySearchTerm: async (searchObject) => {
+      const result = await mongoDB.find(searchObject, devicesCollectionName);
       return result;
     },
 
 
     remove: async (flagData) => {
-      mongoDB.remove(flagData, thermostatCollectionName, () => {
+      mongoDB.remove(flagData, devicesCollectionName, () => {
         return true;
       });     
      },      
@@ -66,38 +66,38 @@ export default {
     },  
 
     getUserByUserId: async (userId) => {
-      const result = await mongoDB.find({ "UserId": userId }, thermostatCollectionName);
+      const result = await mongoDB.find({ "UserId": userId }, devicesCollectionName);
       return result;
     },
 
-    getUserIdByThermostatId: async (thermostatId) => {
-      return mongoDB.find({thermostatHubs: thermostatId}, usersCollectionName);
+    getUserIdBydeviceId: async (deviceId) => {
+      return mongoDB.find({deviceHubs: deviceId}, usersCollectionName);
     },    
 
 
     /**
      * 
-     * @returns thermostatsObject
+     * @returns devicesObject
      */
-    getThermostatData: async () => {
-      const result = await mongoDB.find({}, thermostatCollectionName);
+    getDevicesData: async () => {
+      const result = await mongoDB.find({}, devicesCollectionName);
       return result;     
      },    
     
-    getThermostatDataForHubId: async (hubId) => {
-      const result = await mongoDB.find({ hubId: hubId }, thermostatCollectionName);
+    getDevicesDataForHubId: async (hubId) => {
+      const result = await mongoDB.find({ hubId: hubId }, devicesCollectionName);
     return result;     
    },
 
    updateFeatureFlag: async (searchObject, newObject) => {
      delete newObject._id;
-    mongoDB.update(searchObject, newObject, thermostatCollectionName, (result) => {
+    mongoDB.update(searchObject, newObject, devicesCollectionName, (result) => {
       return true;
     });     
    },    
 
    addFeatureFlag: async (flagData) => {
-    mongoDB.add(flagData, thermostatCollectionName, () => {
+    mongoDB.add(flagData, devicesCollectionName, () => {
       return true;
     });     
    },   
@@ -108,8 +108,8 @@ export default {
     return result;
    },
   
-   addThermostat: async (thermostatObject) => {    
-    mongoDB.add(thermostatObject, thermostatCollectionName, () => {}); 
+   addDevice: async (deviceObject) => {    
+    mongoDB.add(deviceObject, devicesCollectionName, () => {}); 
    },
 
    setup: async () => {
@@ -129,11 +129,11 @@ export default {
     ];
     mongoDB.add(hubs, hubsCollectionName, () => {}); 
          
-     const thermostatsObj = [
+     const devicesObj = [
       {
-        "thermostatId": "0",
+        "deviceId": "0",
         "userId": "0",
-        "thermostatName" : "Living Room",
+        "deviceName" : "Living Room",
         "hubId": "AXCS12",
         "group": "My home",        
         "humidity": "0",
@@ -144,9 +144,9 @@ export default {
       },
 
       {
-        "thermostatId": "0",
+        "deviceId": "0",
         "userId": "1",
-        "thermostatName" : "My Studio thermostat",
+        "deviceName" : "My Studio thermostat",
         "hubId": "B2CF62",
         "group": "My Studio",        
         "humidity": "0",
@@ -157,9 +157,9 @@ export default {
       },
       
       {
-        "thermostatId": "1",
+        "deviceId": "1",
         "userId": "0",
-        "thermostatName" : "Bedroom",
+        "deviceName" : "Bedroom",
         "hubId": "AXCS12",
         "group": "My home",        
         "humidity": "0",
@@ -170,9 +170,9 @@ export default {
       },  
       
       {
-        "thermostatId": "2",
+        "deviceId": "2",
         "userId": "0",
-        "thermostatName" : "BlueRoom thermostat",
+        "deviceName" : "BlueRoom thermostat",
         "hubId": "AXCS12",
         "group": "My Home",        
         "humidity": "0",
@@ -182,7 +182,7 @@ export default {
         "fanMode": "0"
       },      
      ];
-    mongoDB.add(thermostatsObj, thermostatCollectionName, () => {}); 
+    mongoDB.add(devicesObj, devicesCollectionName, () => {}); 
 
     // create users collection
     const usersObj = [
@@ -191,7 +191,7 @@ export default {
         "email" : "toni.nichev@gmail.com",
         "password": "1234",
         "group": "some group",
-        "thermostatHubs": [
+        "deviceHubs": [
           "AXCS12"
         ]     
       },
@@ -200,7 +200,7 @@ export default {
         "email" : "john.smith@gmail.com",
         "password": "1234",
         "group": "some group",     
-        "thermostatHubs": [
+        "deviceHubs": [
           "B2CF62"
         ]     
       }                
@@ -210,8 +210,9 @@ export default {
 
    setupHubsDb: async () => {
     mongoDB.dropDB();
-    const thermostatsObj = [{ONE:1}];
-    mongoDB.add(thermostatsObj, thermostatCollectionName, () => {}); 
+    mongoDB.createEmpty("devices");
+    mongoDB.createEmpty("users");
+
     const hubs = [
       {
         "id": "AXCS12",
@@ -229,8 +230,8 @@ export default {
    
    setupOneUser: async () => {
     mongoDB.dropDB();
-    const thermostatsObj = [];
-    mongoDB.add(thermostatsObj, thermostatCollectionName, () => {}); 
+    const devicesObj = [];
+    mongoDB.add(devicesObj, devicesCollectionName, () => {}); 
 
     // create users collection
     const usersObj = [
@@ -239,7 +240,7 @@ export default {
         "email" : "toni.nichev@gmail.com",
         "password": "1234",
         "group": "some group",
-        "thermostatHubs": [
+        "deviceHubs": [
           "AXCS12"
         ]     
       },
@@ -248,7 +249,7 @@ export default {
         "email" : "john.smith@gmail.com",
         "password": "1234",
         "group": "some group",     
-        "thermostatHubs": [
+        "deviceHubs": [
           "B2CF62"
         ]     
       }                

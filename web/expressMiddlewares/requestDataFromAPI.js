@@ -8,7 +8,7 @@ const stringToObject = (str) => {
   return JSON.parse(fullString);
 }
 
-const requestDataFromAPI = async (req, res, thermostatsData, usersData, next) => { 
+const requestDataFromAPI = async (req, res, devicesData, usersData, next) => { 
   
   let userFromCookie;
   if(typeof req.cookies.user === 'undefined') {
@@ -48,12 +48,12 @@ const requestDataFromAPI = async (req, res, thermostatsData, usersData, next) =>
     console.log("#####################################################################");
   }
 
-  const validDataObj = stringToObject(parsedQs.data); // thermostat(s) ids
+  const validDataObj = stringToObject(parsedQs.data); // device(s) ids
 
   if(typeof validDataObj === 'undefined' ||  validDataObj.length == 0) {
-    // user does not have this thermostat ID
+    // user does not have this device ID
     req.error = {
-      code : 'invalid_thermostat_id'
+      code : 'invalid_device_id'
     }
     req.templateName = 'InternalError'; 
     next();
@@ -61,26 +61,26 @@ const requestDataFromAPI = async (req, res, thermostatsData, usersData, next) =>
   }
 
   const hubId = validDataObj[0][0];
-  const isValidHubIdForThisUser = userFromCookie?.thermostatHubs?.find(element => element === hubId);
+  const isValidHubIdForThisUser = userFromCookie?.deviceHubs?.find(element => element === hubId);
 
   if(typeof isValidHubIdForThisUser === 'undefined' && typeof userFromCookie !== 'undefined') {
-    // user does not have this thermostat ID
+    // user does not have this device ID
     req.error = {
-      code : 'invalid_thermostat_id'
+      code : 'invalid_device_id'
     }
     req.templateName = 'InternalError';
   }
   else {  
     req.fullData = validDataObj;
     req.hubId = hubId;
-    if(typeof thermostatsData[hubId] === 'undefined') {
-      // get thermostats for this hub from DB if it's not fetched yet.
-      const thermostatFromDB = await queries.getThermostatsBySearchTerm({hubId: hubId});
-      thermostatsData[hubId] =thermostatFromDB;
+    if(typeof devicesData[hubId] === 'undefined') {
+      // get devices for this hub from DB if it's not fetched yet.
+      const deviceFromDB = await queries.getDevicesBySearchTerm({hubId: hubId});
+      devicesData[hubId] =deviceFromDB;
     }
 
-    // send thermostats data for this specific hub from the request
-    req.apiData = {"hubId": hubId, "thermostatsData" : thermostatsData[hubId]};
+    // send devices data for this specific hub from the request
+    req.apiData = {"hubId": hubId, "devicesData" : devicesData[hubId]};
     const templateName = typeof PageData[pathname] != 'undefined' ? PageData[pathname].template : '';    
     req.templateName = templateName;
   }

@@ -1,15 +1,15 @@
 import React, { useState, useEffect, useRef }  from 'react';
 import styles from './styles.scss';
-import { thermostatApiUrl } from '../../../utils/getParams';
+import { deviceApiUrl } from '../../../utils/getParams';
 import EventsManager from  '../../../containers/EventsManager';
 import {Poster} from '../../../utils/Poster';
 
 let mode = 0;
 
-const AddPopup = ({closePopup, newThermostatAdded, thermostatAddedClear}) => {  
+const AddPopup = ({closePopup, newDeviceAdded, deviceAddedClear}) => {  
 
   const [msg, setMsg] = useState('ADD DEVICE NAME');
-  const [buttonText, setButtonText] = useState('ADD THERMOSTAT');  
+  const [buttonText, setButtonText] = useState('ADD DEVICE');  
   //const [isMounted, setIsMounted] = useState(false);
 
   const mounted = useRef(false);
@@ -19,8 +19,8 @@ const AddPopup = ({closePopup, newThermostatAdded, thermostatAddedClear}) => {
        console.log('mode :', mode);
       if (!mounted.current) 
         return;      
-      if(mode == 2 && newThermostatAdded()) {
-        setMsg('New thermostat was successfuly added!');
+      if(mode == 2 && newDeviceAdded()) {
+        setMsg('New device was successfuly added!');
         setButtonText('DONE');   
         mode = 3;        
 
@@ -40,7 +40,7 @@ const AddPopup = ({closePopup, newThermostatAdded, thermostatAddedClear}) => {
     }
     if(mode == 2) {
       if(document.querySelector('#addFeatureFlag > div > div button').innerHTML === 'CANCEL') {
-        fetch(`${thermostatApiUrl}/cancel-add-thermostat?data=["${hubId}"]`)
+        fetch(`${deviceApiUrl}/cancel-add-device?data=["${hubId}"]`)
         .then(response => response.json())
         .then(data => { 
           closePopup();
@@ -50,7 +50,7 @@ const AddPopup = ({closePopup, newThermostatAdded, thermostatAddedClear}) => {
         return;
       }
       else {
-        setMsg('New thermostat was successfuly added!');
+        setMsg('New device was successfuly added!');
         setButtonText('DONE');   
         mode = 3;
       }
@@ -59,8 +59,8 @@ const AddPopup = ({closePopup, newThermostatAdded, thermostatAddedClear}) => {
       // done      
       mode = 0;
       setMsg('...');
-      setButtonText('ADD THERMOSTAT');      
-      thermostatAddedClear();
+      setButtonText('ADD DEVICE');      
+      deviceAddedClear();
       closePopup();
     }    
     else if(mode == 3) {
@@ -73,10 +73,10 @@ const AddPopup = ({closePopup, newThermostatAdded, thermostatAddedClear}) => {
     else if(mode == 0) {
       mode = 1;
       const deviceName = document.querySelector("#popup-device-name").value;
-      fetch(`${thermostatApiUrl}/add-thermostat?data=["${hubId}", "${deviceName}"]`)
+      fetch(`${deviceApiUrl}/add-device?data=["${hubId}", "${deviceName}"]`)
         .then(response => response.json())
         .then(data => { 
-          setMsg('Looking for the new thermostat ...');
+          setMsg('Looking for the new device ...');
           setButtonText('CANCEL');
           mode = 2;
       });

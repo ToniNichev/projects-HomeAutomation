@@ -8,4 +8,14 @@
   h2 {
     color: red;
   }
+
+  button {
+    cursor: pointer;
+  }
+
+  button:hover {
+    cursor: pointer;
+    background: black;
+    color: white;
+  }  
 }

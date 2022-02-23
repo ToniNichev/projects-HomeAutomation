@@ -14,7 +14,7 @@ import cookiesManagement from './expressMiddlewares/cookiesManagement';
 import requestDataFromAPI from './expressMiddlewares/requestDataFromAPI';
 const publicPath = `${process.env.APP_HOST}:${process.env.ASSETS_SERVER_PORT}/dist/`;
 // import pageData from './expressMiddlewares/pageData';
-import thermostatServices from './expressMiddlewares/thermostatServices';
+import devicesServices from './expressMiddlewares/devicesServices';
 import userServices from './expressMiddlewares/userServices';
 import weatherServices from './expressMiddlewares/WeatherServices';
 import queries from './src/queries';
@@ -25,30 +25,16 @@ let test = null;
 
 // create users object so we won't jump to DB every time to validate tokens
 let usersData ={};
-let thermostatsData = {};
+let devicesData = {};
 let hubPreferences = {};
 
-// only on app start - load thermostats data !!! To-do get rid of this and request thermostat data for the specific user
+// only on app start - load devices data !!! To-do get rid of this and request devices data for the specific user
 ( async () => {
-  const thermostats = await queries.getAllThermostats();
-  //console.log(">>>>>>>>>: thermostats: ", thermostats);
-
-  if(thermostats.length === 0) {
-    console.log('No thermostat data at all!');
+  const devices = await queries.getAllDevices();
+  if(devices.length === 0) {
+    console.log('No device data at all!');
   }
   else {
-    // sort thermostat data for each hubId
-    /*
-    thermostats.forEach( thermostat => {
-      var hubId = thermostat.hubId;
-      if(typeof thermostatsData[hubId] === 'undefined') {
-        thermostatsData[hubId] = [thermostat];
-      }
-      else {
-        thermostatsData[hubId].push(thermostat);
-      }
-    });
-    */
   }
 })();
 
@@ -134,24 +120,24 @@ app.get('/Robots.txt', (req, res) => {
 app.use(cookiesManagement);
 
 // #############################################################
-//  thermostat services route
+//  devices services route
 // #############################################################
 
-app.get('/thermostat-services/*',
+app.get('/device-services/*',
   function (req, res, next) {
-    requestDataFromAPI(req, res, thermostatsData, usersData, next);
+    requestDataFromAPI(req, res, devicesData, usersData, next);
   },
   function (req, res, next) {
-    if(typeof req?.apiData?.thermostatsData === 'undefined') {
+    if(typeof req?.apiData?.devicessData === 'undefined') {
       if(typeof req?.apiData?.hubId !== 'undefined') {
         const hubId = req.apiData.hubId;
-        thermostatsData[hubId] = [];
+        devicesData[hubId] = [];
         hubPreferences[hubId] = {
           mode: 0
         }
       }
     }
-    thermostatServices(req, res, thermostatsData, hubPreferences, usersData);
+    devicesServices(req, res, devicesData, hubPreferences, usersData);
 });
 
 // #############################################################
@@ -175,7 +161,7 @@ app.get('/weather-services/*', async (req, res) => {
 // #############################################################
 app.get('/*', 
   function (req, res, next) {
-    requestDataFromAPI(req, res, thermostatsData, usersData, next);
+    requestDataFromAPI(req, res, devicesData, usersData, next);
   },
   function (req, res, next) {
     responseWithSourceCode(req, res, req.apiData, req.templateName);
@@ -186,7 +172,7 @@ app.get('/*',
 // #############################################################
 app.post('/services/setup-full', async (req, res) => {
   queries.setup();
-  thermostatsData = [];
+  devicesData = [];
 
   res
   .status(200)
@@ -209,7 +195,7 @@ app.post('/services/setup-hubs-db', async (req, res) => {
 app.post('/services/setup', async (req, res) => {
   //queries.setup();
   queries.setupOneUser();
-  thermostatsData = [];
+  devicesData = [];
 
   res
   .status(200)

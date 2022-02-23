@@ -5,11 +5,11 @@ import GenralPopup from '../GeneralPopup';
 
 const deleteFlag = (hubId, deletelist, editFlag) => {
   const list = JSON.stringify(deletelist);
-  fetch(`${process.env.APP_HOST}:${process.env.SERVER_PORT}/thermostat-services/delete-thermostat?data=["${hubId}"]${list}`)
+  fetch(`${process.env.APP_HOST}:${process.env.SERVER_PORT}/device-services/delete-device?data=["${hubId}"]${list}`)
   .then(response => response.json())
   .then(data => {
 
-    EventsManager.callEvent('thermostats-deleted')();
+    EventsManager.callEvent('devices-deleted')();
     editFlag();
   });  
 }

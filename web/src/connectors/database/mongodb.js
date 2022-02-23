@@ -120,6 +120,16 @@ export default {
     catch (err) {
       console.log(err.stack);
     }  
+  },
+
+  createEmpty: async (collectionName) => {
+    try  {
+      const db = await connect();
+      db.createCollection(collectionName, function() { console.log("Done!")});
+    }
+    catch (err) {
+      console.log(err.stack);
+    }      
   }
 }
 

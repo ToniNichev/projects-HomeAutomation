@@ -18,7 +18,7 @@ class PageLayout extends Component {
         console.log("server side redirects");
         const userString = this.props.serverCookies.user;
         const user = typeof userString === 'undefined' ? undefined : JSON.parse(userString);
-        const hubId = typeof user?.thermostatHubs === 'undefined' || user?.thermostatHubs.length === 0  ? undefined : user?.thermostatHubs[0];
+        const hubId = typeof user?.deviceHubs === 'undefined' || user?.deviceHubs.length === 0  ? undefined : user?.deviceHubs[0];
         if(url !== '/sign-in' && typeof user === 'undefined')  {
           url = '/sign-in';
         }
@@ -27,8 +27,8 @@ class PageLayout extends Component {
         // client side redirects
         console.log("client side redirects");
         const user = this.cookies.get('user');
-        //const hubId = user?.thermostatHubs[0];
-        const hubId = typeof user?.thermostatHubs === 'undefined' || user?.thermostatHubs.length === 0  ? undefined : user?.thermostatHubs[0];
+        //const hubId = user?.deviceHubs[0];
+        const hubId = typeof user?.deviceHubs === 'undefined' || user?.deviceHubs.length === 0  ? undefined : user?.deviceHubs[0];
 
         if(url !== '/setup') {
           if(url !== '/sign-in') {
@@ -42,7 +42,6 @@ class PageLayout extends Component {
         }
 
       }
-      
       const page = PageData[url];
 
       const allLayout = page.layout.map((layoutList) => {

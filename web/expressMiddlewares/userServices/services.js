@@ -33,7 +33,7 @@ const registerUser = async (req, res) => {
 
   requestObj.id = hubId + '-u';
   requestObj.group = 'user';
-  requestObj.thermostatHubs = [hubId];
+  requestObj.deviceHubs = [hubId];
   const resultUpdate = await queries.addUser(requestObj);
   if(resultUpdate.result.ok === 1) {
     sendResponse(res, {message: `User addded !`});
@@ -122,8 +122,8 @@ const updateUser = async (req, res, usersData) => {
       return;
     }
     const hubUpdateResult = await queries.updateHub({id: requestObj.hubId}, {registered: true});
-    updateObj.thermostatHubs = [];
-    updateObj.thermostatHubs[0] = requestObj.hubId
+    updateObj.deviceHubs = [];
+    updateObj.deviceHubs[0] = requestObj.hubId
   }  
   const result = await queries.updateUser(searchObj, updateObj);
   if( result.matchedCount !== 1) {

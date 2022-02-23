@@ -60,7 +60,7 @@ class SignIn extends Component {
       return;
     }
     const user = JSON.stringify(result);
-    const hubId = result.thermostatHubs[0];
+    const hubId = result.deviceHubs[0];
     this.cookies.set('user', user, { path: '/' });
     //const l = 
     this.setState({popupMessage: `<p>Welcome!</p><p><button onclick="window.redirect('${hubId}')">OK</button></p>`});

@@ -18,16 +18,16 @@ class Home extends Component {
   
   constructor(props) {
     super(props);
-    this.getThermostatsSettings();
+    this.getDevicesSettings();
     this.changeRange = [];
     this.setTempAndHumidity = [];
     this.setDialersForTheFirstTime = false;
-    this.setThermostatSliderMode = [];
-    this.setThermostatFanSliderMode = [];
+    this.setDevicesliderMode = [];
+    this.setDeviceFanSliderMode = [];
     this.disableFetchData = false;
     this.hubId = null;
     this.dataLength = 0;
-    this.newThermostatAdded = false;
+    this.newDeviceAdded = false;
 
     this.addFlagVisible = false;
     
@@ -36,22 +36,22 @@ class Home extends Component {
       messagePopup: false,   
       messagePopupText: '',      
       flagEditable: false,
-      thermostatBodyCSS: [],
-      thermostats: []
+      deviceBodyCSS: [],
+      Devices: []
     };
     // get api data
     const apiData = typeof global.__API_DATA__ !== 'undefined' ? global.__API_DATA__ : typeof window === 'undefined' ? {} : window.__API_DATA__;
-    this.thermostatsData = apiData.thermostatsData;
+    this.DevicesData = apiData.DevicesData;
     this.hubId = apiData.hubId;
     if( typeof window !== 'undefined' && typeof this.hubId === 'undefined') {
       window.location = '/sign-in';
     }
-    // fetch thermostat and weather data
+    // fetch device and weather data
     this.fetching = false;
     this.fetchData();
     this.fetchWeatherData();      
-    EventsManager.registerEvent('thermostats-deleted', () => {
-      this.setState({messagePopupText: '<h2>Selected Thermostats removed!</h2><hr/><p>Make sure that you reset all erased thermostats to set them up into add mode so you will be able to add them later.</p>'});
+    EventsManager.registerEvent('Devices-deleted', () => {
+      this.setState({messagePopupText: '<h2>Selected Devices removed!</h2><hr/><p>Make sure that you reset all erased Devices to set them up into add mode so you will be able to add them later.</p>'});
       this.setState({messagePopup: true});
     });
   }  
@@ -62,7 +62,7 @@ class Home extends Component {
 
   closePopup() {
     this.setState({addFlagVisible: false});    
-    this.getThermostatsSettings();
+    this.getDevicesSettings();
   }  
 
   closeMessagePopup() {
@@ -70,13 +70,13 @@ class Home extends Component {
     window.location.reload();    
   }
 
-  isNewThermostatAdded() {
-    const result = this.newThermostatAdded;
+  isNewDeviceAdded() {
+    const result = this.newDeviceAdded;
     return result;
   }
 
-  thermostatAddedClear() {
-    this.newThermostatAdded = false;
+  deviceAddedClear() {
+    this.newDeviceAdded = false;
   }  
 
 
@@ -84,7 +84,7 @@ class Home extends Component {
     this.setState({flagEditable: !this.state.flagEditable});     
   }
 
-  getThermostatsSettings() {
+  getDevicesSettings() {
     // empty for now
   }
 
@@ -128,7 +128,7 @@ class Home extends Component {
       return;
     }
     console.log("fetch ...");
-    fetch(`${process.env.APP_HOST}:${process.env.SERVER_PORT}/thermostat-services/get-full-data?data=["${this.hubId}"]`)
+    fetch(`${process.env.APP_HOST}:${process.env.SERVER_PORT}/device-services/get-full-data?data=["${this.hubId}"]`)
       .then(response => response.json())
       .then(data => { 
         if(data?.error) {
@@ -136,9 +136,8 @@ class Home extends Component {
         }
         if(this.dataLength < data.length) {
           this.dataLength = data.length;
-          //EventsManager.callEvent("newThermostatAdded")();
-          this.thermostatsData = data;
-          this.newThermostatAdded = true;
+          this.DevicesData = data;
+          this.newDeviceAdded = true;
         }
         for(let i = 0; i < data.length; i ++) {
           const id = data[i].id;
@@ -147,27 +146,23 @@ class Home extends Component {
           const requiredTemp = data[i].requiredTemp;
           const mode = data[i].mode;
           const fanMode = data[i].fanMode;
-
-          //const newThermostatBodyCSS = typeof this.state.thermostatBodyCSS[i] === 'undefined' ?  [styles.flagWrapper] :  [...this.state.thermostatBodyCSS]; 
           
-
-          if (typeof data[i].lastConnected === 'undefined' || (new Date() - new Date(data[i].lastConnected)) / 1000 > 20) {
-            
-            const newThermostatBodyCSS =  [...this.state.thermostatBodyCSS]; 
-            newThermostatBodyCSS[i] = [styles.flagWrapper, styles.flagWrapperError];            
-            this.setState({thermostatBodyCSS: newThermostatBodyCSS}); 
+          if (typeof data[i].lastConnected === 'undefined' || (new Date() - new Date(data[i].lastConnected)) / 1000 > 20) {            
+            const newDeviceBodyCSS =  [...this.state.deviceBodyCSS]; 
+            newDeviceBodyCSS[i] = [styles.flagWrapper, styles.flagWrapperError];            
+            this.setState({deviceBodyCSS: newDeviceBodyCSS}); 
           }
           else {
-            const newThermostatBodyCSS =  [...this.state.thermostatBodyCSS];
-            newThermostatBodyCSS[i] = [styles.flagWrapper];
-            this.setState({thermostatBodyCSS: newThermostatBodyCSS }); 
+            const newDeviceBodyCSS =  [...this.state.deviceBodyCSS];
+            newDeviceBodyCSS[i] = [styles.flagWrapper];
+            this.setState({deviceBodyCSS: newDeviceBodyCSS }); 
           }
 
           if(typeof this.changeRange[i] != 'undefined') {
             this.changeRange[i](requiredTemp);
             this.setTempAndHumidity[i](curentHumidity, curentTemp);
-            this.setThermostatSliderMode[i](mode);
-            this.setThermostatFanSliderMode[i](fanMode);
+            this.setDevicesliderMode[i](mode);
+            this.setDeviceFanSliderMode[i](fanMode);
             this.connected = false;
           }
         } 
@@ -182,24 +177,24 @@ class Home extends Component {
     this.disableFetchData = mode;
   }
 
-  onChangeTemperatureCallback = (thermostatId, requiredTemperature) => {
-    fetch(`${process.env.APP_HOST}:${process.env.SERVER_PORT}/thermostat-services/set-desired-temperature?data=["${this.hubId}"][${thermostatId},${requiredTemperature}]`)
+  onChangeTemperatureCallback = (deviceId, requiredTemperature) => {
+    fetch(`${process.env.APP_HOST}:${process.env.SERVER_PORT}/device-services/set-desired-temperature?data=["${this.hubId}"][${deviceId},${requiredTemperature}]`)
       .then(response => response.json())
       .then(data => { 
       });
   }
 
 
-  onChangeThermostatModeCallback = (thermostatId, requiredMode) => {
-    fetch(`${process.env.APP_HOST}:${process.env.SERVER_PORT}/thermostat-services/set-thermostat-mode?data=["${this.hubId}"][${thermostatId},${requiredMode}]`)
+  onChangeDeviceModeCallback = (deviceId, requiredMode) => {
+    fetch(`${process.env.APP_HOST}:${process.env.SERVER_PORT}/device-services/set-device-mode?data=["${this.hubId}"][${deviceId},${requiredMode}]`)
       .then(response => response.json())
       .then(data => { 
       });
   }  
   
 
-  onChangeThermostatFanCallback = (thermostatId, requiredMode) => {
-    fetch(`${process.env.APP_HOST}:${process.env.SERVER_PORT}/thermostat-services/set-thermostat-fan-mode?data=["${this.hubId}"][${thermostatId},${requiredMode}]`)
+  onChangeDeviceFanCallback = (deviceId, requiredMode) => {
+    fetch(`${process.env.APP_HOST}:${process.env.SERVER_PORT}/device-services/set-device-fan-mode?data=["${this.hubId}"][${deviceId},${requiredMode}]`)
       .then(response => response.json())
       .then(data => { 
       });
@@ -207,7 +202,7 @@ class Home extends Component {
   
 
   render() {
-    const Thermostats = this.thermostatsData;
+    const Devices = this.DevicesData;
 
     return (
       <div className={styles.wrapper}>
@@ -217,33 +212,33 @@ class Home extends Component {
               <button className={this.state.flagEditable ? styles.addButtonHidden : styles.addButtonVisible } onClick={() => { this.addFlag()} }>ADD</button>
               <EditDelete flagEditable={ this.state.flagEditable } editFlag={ () => { this.editFlag() } } hubId={ this.hubId } />
             </div>
-              {Thermostats && Thermostats.map( (thermostat, tId) => {
-                const id = parseInt(thermostat.thermostatId);
-                const key = `thermostat-control-${id}`;
-                const thermostatModeKey = `thermostat-mode-${id}`;
-                const thermostatFanModeKey = `thermostat-fan-mode-${id}`;
-                const thermostatName = thermostat.thermostatName;
-                const wrapperClass = typeof this.state.thermostatBodyCSS[tId] === 'undefined' ? [] : this.state.thermostatBodyCSS[tId].join(' ');
+              {Devices && Devices.map( (device, tId) => {
+                const id = parseInt(device.deviceId);
+                const key = `device-control-${id}`;
+                const deviceModeKey = `device-mode-${id}`;
+                const deviceFanModeKey = `device-fan-mode-${id}`;
+                const deviceName = device.deviceName;
+                const wrapperClass = typeof this.state.deviceBodyCSS[tId] === 'undefined' ? [] : this.state.deviceBodyCSS[tId].join(' ');
                 return(
                 <div key={key} className={wrapperClass}  >
-                  <BulletPoint flagName={thermostatName} flagId={id} status={this.state.flagEditable} />
-                  <span className={styles.roomName}>{thermostatName}</span>                  
+                  <BulletPoint flagName={deviceName} flagId={id} status={this.state.flagEditable} />
+                  <span className={styles.roomName}>{deviceName}</span>                  
 
                   <RangeSlider 
                     min = {1}
-                    key={thermostatModeKey}
-                    name="thermostat-mode-selector"
-                    onChangeCallback={this.onChangeThermostatModeCallback}  
-                    SetRangeValue={ (func) => { this.setThermostatSliderMode[id] = func;  } }                     
+                    key={deviceModeKey}
+                    name="device-mode-selector"
+                    onChangeCallback={this.onChangeDeviceModeCallback}  
+                    SetRangeValue={ (func) => { this.setDevicesliderMode[id] = func;  } }                     
                     SliderId={id} labels={['OFF', 'COOL', 'HOT']} />
 
                   <p className={styles.fanModeText}>FAN MODE</p>
                   <RangeSlider 
                     min={0}
-                    key={thermostatFanModeKey}
-                    name="thermostat-fan-mode-selector"                
-                    onChangeCallback={this.onChangeThermostatFanCallback}  
-                    SetRangeValue={ (func) => { this.setThermostatFanSliderMode[id] = func;  } } 
+                    key={deviceFanModeKey}
+                    name="device-fan-mode-selector"                
+                    onChangeCallback={this.onChangeDeviceFanCallback}  
+                    SetRangeValue={ (func) => { this.setDeviceFanSliderMode[id] = func;  } } 
                     SliderId={id} labels={['AUTO', 'LOW', 'HIGH' ]} />                    
 
                   <Dialer 
@@ -259,7 +254,7 @@ class Home extends Component {
                 </div>);}
               )}
           </div>      
-          {this.state.addFlagVisible ? <AddPopup newThermostatAdded={ () =>{ return this.isNewThermostatAdded() } } thermostatAddedClear={ () => { this.thermostatAddedClear() } } closePopup={ () => { this.closePopup() } } /> : null}
+          {this.state.addFlagVisible ? <AddPopup newDeviceAdded={ () =>{ return this.isNewDeviceAdded() } } eviceAddedClear={ () => { this.deviceAddedClear() } } closePopup={ () => { this.closePopup() } } /> : null}
           {this.state.messagePopup ? <MessagePopup msg={ this.state.messagePopupText } closeMessagePopup = { () =>{ this.closeMessagePopup() } } />: null }
       </div>
     );

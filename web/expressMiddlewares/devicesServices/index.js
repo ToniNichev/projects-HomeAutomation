@@ -1,13 +1,13 @@
 import { 
-    getThermostatListFromDB,
+    getDeviceListFromDB,
     getReadings,
     getFullReadings,
     setDesiredTemperature,
-    setThermostatMode,
-    setThermostatFanMode,
-    setAddThermostatMode,
-    cancelAddThermostatMode,
-    deleteThermostat
+    setDeviceMode,
+    setDeviceFanMode,
+    setAddDeviceMode,
+    cancelAddDeviceMode,
+    deleteDevice
 } from './services';
 
 
@@ -25,7 +25,7 @@ const sendResponse = (res, responseString) => {
     res.send(responseString);  
 }
 
-const ThermostatServices = async (req, res, thermostatsData, hubPreferences, usersData) => {
+const DeviceServices = async (req, res, devicesData, hubPreferences, usersData) => {
     if(typeof req?.query?.data === 'undefined') {
         sendResponse(res, {error: 1, message: 'missing `data` parameter.'});
     }
@@ -69,31 +69,31 @@ const ThermostatServices = async (req, res, thermostatsData, hubPreferences, use
 
     switch(action) {
         case 'get-full-data':
-            await getFullReadings(req, res, thermostatsData[hubId]);
+            await getFullReadings(req, res, devicesData[hubId]);
             break;
         case 'get-data':
-            getReadings(req, res, thermostatsData[hubId], requestData, hubPreferences[hubId]);
+            getReadings(req, res, devicesData[hubId], requestData, hubPreferences[hubId]);
             break;   
-        case 'delete-thermostat': 
-            await deleteThermostat(req, res, thermostatsData[hubId], requestData, hubPreferences[hubId]);
-            thermostatsData[hubId] = await getThermostatListFromDB(hubId);
+        case 'delete-device': 
+            await deleteDevice(req, res, devicesData[hubId], requestData, hubPreferences[hubId]);
+            devicesData[hubId] = await getDeviceListFromDB(hubId);
             break;            
         case 'set-desired-temperature': 
-            await setDesiredTemperature(req, res, thermostatsData[hubId], requestData);
+            await setDesiredTemperature(req, res, devicesData[hubId], requestData);
             break;
-        case 'set-thermostat-mode': 
-            await setThermostatMode(req, res, thermostatsData[hubId], requestData);
+        case 'set-device-mode': 
+            await setDeviceMode(req, res, devicesData[hubId], requestData);
             break;  
-        case 'set-thermostat-fan-mode': 
-            await setThermostatFanMode(req, res, thermostatsData[hubId], requestData);
+        case 'set-device-fan-mode': 
+            await setDeviceFanMode(req, res, devicesData[hubId], requestData);
             break;
-        case 'add-thermostat': 
-            await setAddThermostatMode(req, res, thermostatsData[hubId], requestData, hubPreferences[hubId]);        
+        case 'add-device': 
+            await setAddDeviceMode(req, res, devicesData[hubId], requestData, hubPreferences[hubId]);        
             break;     
-            case 'cancel-add-thermostat': 
-            await cancelAddThermostatMode(req, res, thermostatsData[hubId], requestData, hubPreferences[hubId]);        
+            case 'cancel-add-device': 
+            await cancelAddDeviceMode(req, res, devicesData[hubId], requestData, hubPreferences[hubId]);        
             break;                
     }
 }
 
-export default ThermostatServices;
+export default DeviceServices;
