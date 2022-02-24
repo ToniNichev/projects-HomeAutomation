@@ -3,20 +3,20 @@
 #include "RFCommunicator.h"
 
 #define ethernetDomain "toni-develops.com"
-#define ethernetUrl "GET /thermostat-services/get-data?data="
+#define ethernetUrl "GET /device-services/get-data?data="
 #define ethernetPort 8061
 
 #define hubId "AXCS12"
 //#define hubId "B2CF62"
 
 
-char thermostatsData[100] = ""; 
+char devicesData[100] = ""; 
 short int programMode = 0;
 
 void setHubId() {
-  strcpy(thermostatsData, "[\"");
-  strcat(thermostatsData, hubId);  
-  strcat(thermostatsData, "\"]");  
+  strcpy(devicesData, "[\"");
+  strcat(devicesData, hubId);  
+  strcat(devicesData, "\"]");  
 }
       
 void setup() {
@@ -37,17 +37,17 @@ void loop() {
   char ethernetURL[150] = "";
   Serial.println();
 
-  // construct the url and append thermostat id
-  if(thermostatsData[0] != '[') {
+  // construct the url and append device id
+  if(devicesData[0] != '[') {
     setHubId();
   }
 
   strcpy(ethernetURL, ethernetUrl);
-  strcat(ethernetURL, thermostatsData);
+  strcat(ethernetURL, devicesData);
   strcat(ethernetURL, " HTTP/1.1");
 
   Serial.println();
-  Serial.print("⌂ >>> ♁ :"); // request from the hub to the web server, passing thermostat's readings
+  Serial.print("⌂ >>> ♁ :"); // request from the hub to the web server, passing device's readings
   Serial.print(ethernetURL);
   Serial.println();
     
@@ -67,33 +67,33 @@ void loop() {
   setHubId();
       
   char data[32] = "";  
-  short int thermostatId = 0; // starting from first thermostat
+  short int deviceId = 0; // starting from first device
   short int communicationChannel;
   int pos = 0;
 
   if(serverData[1] == '#') {
     // #########################
-    // add thermostat hub mode
+    // add device hub mode
     // #########################    
     if(serverData[2] == '#') {
       programMode = 0;
     }
     else {
-      // set up hub to `add thermostat mode`
+      // set up hub to `add device mode`
       RFCommunicatorSetup(0,1);
-      // send thermostat ID to the thermostat: [#,0]
+      // send device ID to the device: [#,0]
       Serial.print("0 | ⌂ >>> ⍑: ");
       Serial.println(serverData);
 
       
       RFCommunicatorSend(serverData);
       delay(100);
-      Serial.println("(adding thermostat) waiting for ⍑ response ...");
+      Serial.println("(adding device) waiting for ⍑ response ...");
       char tempTwo[32] = "";
       RFCommunicatorListen(tempTwo, false);
       Serial.print("0 | ⍑ >>> ⌂ : ");
       Serial.println(tempTwo);
-      strcat(thermostatsData, tempTwo);
+      strcat(devicesData, tempTwo);
       programMode = 0;
       RFCommunicatorSetup(2, 3);
       delay(2000);
@@ -113,7 +113,7 @@ void loop() {
       data[pos] = serverData[i];
       pos ++;
       if(serverData[i] == ']') {
-        // sending data to the thermostat
+        // sending data to the device
         RFCommunicatorSend(data);  
         printToSerial(communicationChannel, data, true);     
         delay(1000);       
@@ -121,11 +121,11 @@ void loop() {
         // clear data
         memset(data, 0, 32);            
 
-        // listen for data from the thermostat
+        // listen for data from the device
         char temp[32] = "";         
         if(!RFCommunicatorListen(temp, true)) {
           printToSerial(communicationChannel, temp, false);
-          strcat(thermostatsData, temp);
+          strcat(devicesData, temp);
         }
         else {
           Serial.println(" ..... Timed out .....");
@@ -133,7 +133,7 @@ void loop() {
 
 
         delay(1000);
-        thermostatId ++;
+        deviceId ++;
         pos = 0;
         Serial.println();
       }
@@ -147,11 +147,11 @@ void loop() {
 
 
 
-void printToSerial(short int thermostatId, char data[32], bool hubToThermostat) {
+void printToSerial(short int deviceId, char data[32], bool hubToDevice) {
   Serial.println();
-  Serial.print(thermostatId);     
+  Serial.print(deviceId);     
   Serial.print(" | ");
-  if(hubToThermostat)
+  if(hubToDevice)
     Serial.print("⌂ >>> ⍑ ");
   else
     Serial.print("⍑ >>> ⌂ ");

@@ -8,11 +8,11 @@
 #define RELAY_FAN_HIGH 6
 #define RELAY_COOL 5
 #define RELAY_HEAT 3
-#define THERMOSTAT_EPROM_ADDRESS 3
+#define DEVICE_EPROM_ADDRESS 3
 #define RESET_PIN 2
 
-// thermostat settings
-short int thermostatId = 0;
+// device settings
+short int deviceId = 0;
 
 // program variables
 int len;
@@ -28,7 +28,7 @@ float hum;  //Stores humidity value
 float temp; //Stores temperature value
 char t[4] = "";
 char msg[32] = "";
-short int thermostatMode = 0;
+short int deviceMode = 0;
 
 
 void setup() {  
@@ -60,20 +60,20 @@ void setup() {
   Serial.println("#############################################");
   Serial.println("⍑ STARTING ...");
 
-  //writeIntIntoEEPROM(THERMOSTAT_EPROM_ADDRESS, -1);  // !!!  force to set up thermostat in ADD thermostat mode !!!!
+  //writeIntIntoEEPROM(DEVICE_EPROM_ADDRESS, -1);  // !!!  force to set up device in ADD device mode !!!!
   
-  short int Id = readIntFromEEPROM(THERMOSTAT_EPROM_ADDRESS);
+  short int Id = readIntFromEEPROM(DEVICE_EPROM_ADDRESS);
   if(Id == -1) {
     communicationChannel = 0;
-    RFCommunicatorSetup(1,0); // set up thermostat to add mode
-    programMode = 1;          // set add new thermostat mode
+    RFCommunicatorSetup(1,0); // set up device to add mode
+    programMode = 1;          // set add new device mode
     Serial.println("⍑ is in ADD mode ...");
   }
   else {
-    thermostatId = Id;
+    deviceId = Id;
     RFCommunicatorSetup(3, 2);
     Serial.print("⍑ ID : ");
-    Serial.println(thermostatId);
+    Serial.println(deviceId);
     Serial.print("⍑ chanel :");
     Serial.println(communicationChannel);
     Serial.println("#############################################");
@@ -94,7 +94,7 @@ void loop() {
 
   if(digitalRead(RESET_PIN) == 1) {
     Serial.println("Resetting ....");
-    writeIntIntoEEPROM(THERMOSTAT_EPROM_ADDRESS, -1);
+    writeIntIntoEEPROM(DEVICE_EPROM_ADDRESS, -1);
     for(int q=0; q< 5; q++) {
       digitalWrite(RELAY_FAN_LOW, HIGH);
       delay(1000);
@@ -118,14 +118,14 @@ void loop() {
 
   if(programMode == 1) {
     // ###########################
-    // adding thermostat mode
+    // adding device mode
     // ###########################    
     float *serverVals = parseToValues(serverData);
     short int id = (int) serverVals[1];
-    thermostatId = id;
+    deviceId = id;
     Serial.print("Received NEW ⍑ ID: ");
     Serial.println(id);
-    writeIntIntoEEPROM(THERMOSTAT_EPROM_ADDRESS, id);    
+    writeIntIntoEEPROM(DEVICE_EPROM_ADDRESS, id);    
     delay(100);    
     char msgToServer[32] = "[\"added\"]";
     RFCommunicatorSend(msgToServer);
@@ -146,17 +146,17 @@ void loop() {
     float *serverVals = parseToValues(serverData);
     short int _id = serverVals[0];
     short int fanMode = (int) serverVals[3];  
-    short int thermostatMode = (int) serverVals[2];
+    short int deviceMode = (int) serverVals[2];
     float requiredTemperature = serverVals[1];
     Serial.println();
-    if(_id == thermostatId) {
+    if(_id == deviceId) {
             
       hum = dht.readHumidity();
       temp = dht.readTemperature();  
     
       dtostrf(hum, 4, 2, t); 
       msg[0] = '[';
-      msg[1] = '0' + thermostatId;    
+      msg[1] = '0' + deviceId;    
       msg[2] = ',';
       msg[3] = t[0];
       msg[4] = t[1];
@@ -175,7 +175,7 @@ void loop() {
       msg[16] = ']';       
   
       delay(200);
-      // ⍑ >>> ⌂ send thermostat readings to the hub
+      // ⍑ >>> ⌂ send device readings to the hub
       printToSerial(communicationChannel, msg, false);  
       RFCommunicatorSend(msg);     
    
@@ -197,7 +197,7 @@ void loop() {
       }
       
       // Set temperature
-      switch(thermostatMode) {
+      switch(deviceMode) {
         case 1:
           digitalWrite(RELAY_COOL, HIGH);    
           digitalWrite(RELAY_HEAT, HIGH);
@@ -245,10 +245,10 @@ void loop() {
 // ##############################################
 
 
-void printToSerial(short int thermostatId, char data[32], bool hubToThermostat) {
-  Serial.print(thermostatId);     
+void printToSerial(short int deviceId, char data[32], bool hubToDevice) {
+  Serial.print(deviceId);     
   Serial.print(" | ");
-  if(hubToThermostat)
+  if(hubToDevice)
     Serial.print("⌂ >>> ⍑ ");
   else
     Serial.print("⍑ >>> ⌂ ");
