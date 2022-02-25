@@ -12,7 +12,7 @@ const requestDataFromAPI = async (req, res, devicesData, usersData, next) => {
   
   let userFromCookie;
   if(typeof req.cookies.user === 'undefined') {
-  req.cookies.user  = undefined;
+    req.cookies.user  = undefined;
    }
    else {
       try {
@@ -24,9 +24,8 @@ const requestDataFromAPI = async (req, res, devicesData, usersData, next) => {
 
   
   if(typeof userFromCookie !== 'undefined') {
-    //const user = queries.getUser({email: userFromCookie.email, userFromCookie: userFromCookie.accessToken});
+    // add user
     const userId = userFromCookie.id;
-    //const accessToken = userFromCookie.accessToken;
     usersData[userId] = userFromCookie;
   }
 

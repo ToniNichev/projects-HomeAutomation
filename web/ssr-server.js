@@ -128,7 +128,7 @@ app.get('/device-services/*',
     requestDataFromAPI(req, res, devicesData, usersData, next);
   },
   function (req, res, next) {
-    if(typeof req?.apiData?.devicessData === 'undefined') {
+    if(typeof req?.apiData?.devicesData === 'undefined') {
       if(typeof req?.apiData?.hubId !== 'undefined') {
         const hubId = req.apiData.hubId;
         devicesData[hubId] = [];
@@ -246,5 +246,19 @@ Loadable.preloadAll().then(() => {
   }
 
 
+// #############################################################
+//  starting workers
+// #############################################################  
+
+function runWorkers() {
+  console.log("--=== workers ===--");
+  console.log("(w) hubPreferences: ", hubPreferences);
+  setTimeout(() =>{
+    runWorkers();
+  }, 1000);
+}
+const workers = setTimeout(() => {
+  runWorkers();
+}, 1000);
 
 });
