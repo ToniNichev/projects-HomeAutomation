@@ -10,7 +10,7 @@ import { getBundles } from 'react-loadable/webpack';
 import ReactDOMServer from 'react-dom/server';
 import templateList from './src/templates/TemplateList';
 import cookieParser from 'cookie-parser';
-import cookiesManagement from './expressMiddlewares/cookiesManagement';
+//import cookiesManagement from './expressMiddlewares/cookiesManagement';
 import requestDataFromAPI from './expressMiddlewares/requestDataFromAPI';
 const publicPath = `${process.env.APP_HOST}:${process.env.ASSETS_SERVER_PORT}/dist/`;
 // import pageData from './expressMiddlewares/pageData';
@@ -113,11 +113,6 @@ app.get('/Robots.txt', (req, res) => {
   User-agent: * Disallow: /
   `)
 });
-
-// #############################################################
-// adding cookie middleware
-// #############################################################
-app.use(cookiesManagement);
 
 // #############################################################
 //  devices services route

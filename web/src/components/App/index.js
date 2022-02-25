@@ -27,19 +27,21 @@ if(typeof document != 'undefined') {
 
 const server = (props) => {
   const cookies = props.cookies;
+  const apiData = props.apiData;
   return (
-    <StaticRouter location={ props.url } serverCookies={cookies}  context={context}>
+    <StaticRouter location={ props.url } serverCookies={cookies} apiData={apiData}  context={context}>
       <Switch>
-        <Route exact path="*" render={(props) => <PageLayout serverCookies={cookies} {...props} />} />  
+        <Route exact path="*" render={(props) => <PageLayout serverCookies={cookies} apiData={apiData} {...props} />} />  
       </Switch>            
     </StaticRouter>
   );
 }
 
-export default ( {req} ) => {
+export default ( { req } ) => { 
   return (
     <div className={styles.appWrapper}>
       {typeof window == 'undefined' ? server(req) :client(req)}
     </div>   
   );
 }
+

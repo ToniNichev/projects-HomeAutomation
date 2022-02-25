@@ -16,6 +16,11 @@ class PageLayout extends Component {
       if(typeof window === 'undefined') {
         // server side redirects
         console.log("server side redirects");
+        if(this.props.apiData?.error === 1 ) {
+          // url = '/sign-in';
+          this.cookies.remove('user');
+          return  <div key='{id}' className={styles.error}>Internal server error!</div>
+        }
         const userString = this.props.serverCookies.user;
         const user = typeof userString === 'undefined' ? undefined : JSON.parse(userString);
         const hubId = typeof user?.deviceHubs === 'undefined' || user?.deviceHubs.length === 0  ? undefined : user?.deviceHubs[0];
@@ -26,18 +31,18 @@ class PageLayout extends Component {
       } else {
         // client side redirects
         console.log("client side redirects");
-        const user = this.cookies.get('user');
-        //const hubId = user?.deviceHubs[0];
+        const user =  this.cookies.get('user');
         const hubId = typeof user?.deviceHubs === 'undefined' || user?.deviceHubs.length === 0  ? undefined : user?.deviceHubs[0];
 
         if(url !== '/setup') {
           if(url !== '/sign-in') {
-            if(typeof user === 'undefined') {
+            console.log("###### user :", user);          
+            if(typeof user === 'undefined') {              
               url = '/sign-in';
             }
           }
           else if(typeof hubId !== 'undefined') {
-            location.href = `/home?data=["${hubId}"]`;
+            //location.href = `/home?data=["${hubId}"]`;
           }
         }
 

@@ -10,6 +10,7 @@ import { apiUrl } from '../../utils/getParams';
 import Dialer from '../Dialer';
 import RangeSlider from '../RangeSlider';
 import TemperatureBar from '../TemperatureBar';
+import Cookies from 'universal-cookie';
 const {WEATHER_API_URL} = process.env;
 import EventsManager from  '../../containers/EventsManager';
 
@@ -28,6 +29,7 @@ class Home extends Component {
     this.hubId = null;
     this.dataLength = 0;
     this.newDeviceAdded = false;
+    this.cookies = new Cookies();
 
     this.addFlagVisible = false;
     
@@ -118,7 +120,8 @@ class Home extends Component {
   }
 
   fetchData = () => {
-    if(typeof window == 'undefined' || this.fetching === true) return;
+    const user = this.cookies.get('user');
+    if(typeof window == 'undefined' || this.fetching === true || typeof user === 'undefined') return;
     this.fetching = true;
     const refreshRate = 2000;
     if(this.disableFetchData === true) {
@@ -131,8 +134,11 @@ class Home extends Component {
     fetch(`${process.env.APP_HOST}:${process.env.SERVER_PORT}/device-services/get-full-data?data=["${this.hubId}"]`)
       .then(response => response.json())
       .then(data => { 
-        if(data?.error) {
-          window.location = '/sign-out';
+        if(typeof data?.error !== 'undefined') {
+          console.log("######################")
+          console.log("error: ", data.error)
+          console.log("######################")
+          //window.location = '/sign-out';
         }
         if(this.dataLength < data.length) {
           this.dataLength = data.length;

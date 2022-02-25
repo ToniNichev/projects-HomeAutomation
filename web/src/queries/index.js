@@ -70,7 +70,7 @@ export default {
       return result;
     },
 
-    getUserIdBydeviceId: async (deviceId) => {
+    getUserIdByDeviceId: async (deviceId) => {
       return mongoDB.find({deviceHubs: deviceId}, usersCollectionName);
     },    
 

@@ -41,6 +41,7 @@ const getReadings = async (req, res, deviceData, deviceResponse, hubPreferences)
     // adding device mode
     if(req.fullData.length > 1 && req.fullData[1][0] == `added`) {
       const users = await queries.getUserIdByDeviceId(hubId);
+      
       if(users.length === 0) {
         sendResponse(res, "{'error': 'no user data'}");
       }

@@ -8,26 +8,66 @@ const stringToObject = (str) => {
   return JSON.parse(fullString);
 }
 
+const sendResponse = (res, responseString) => {
+  res.status(200);
+  res.removeHeader('X-Powered-By');
+  res.removeHeader('Set-Cookie');
+  res.removeHeader('Connection');
+  res.send(responseString);  
+}
+
 const requestDataFromAPI = async (req, res, devicesData, usersData, next) => { 
   
   let userFromCookie;
   if(typeof req.cookies.user === 'undefined') {
     req.cookies.user  = undefined;
-   }
-   else {
-      try {
-        userFromCookie = JSON.parse(req.cookies.user);
-      }catch(e) {
-          req.cookies.user  = undefined;
-      }
-   }
+  }
+  else {
+    try {
+      userFromCookie = JSON.parse(req.cookies.user);
+    }catch(e) {
+      req.cookies.user  = undefined;
+    }
+  }
 
   
+   const userId = userFromCookie?.id;
+   if(typeof userId === 'undefined') {
+     // userFromCookie is undefined, will redirect to sign-in page
+    req.apiData = { };
+    req.templateName = 'Html'; 
+    next();
+    return;     
+   }
+   if(typeof usersData[userId] === 'undefined' ) {
+     // user is not loaded, get it from DB
+     const userResponse = await queries.getUser({id: userId});
+     if(userResponse.length === 0) {
+       // user can't be found
+       req.apiData = { error: 7, message: "Can't find user" };
+       req.templateName = 'Html'; 
+       next();
+       return;          
+     }
+     usersData[userId] = userResponse[0];
+   }
+
+  if(usersData[userId].accessToken !== userFromCookie.accessToken) {
+    req.apiData = { error: 5, message: "invalid token" };
+    req.templateName = 'Html'; 
+    next();
+    return;
+  }
+
+   
+
+  /*
   if(typeof userFromCookie !== 'undefined') {
     // add user
     const userId = userFromCookie.id;
     usersData[userId] = userFromCookie;
   }
+  */
 
   req.parsedUrl = url.parse(req.url);
   const pathname = req.parsedUrl.pathname;  

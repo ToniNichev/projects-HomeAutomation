@@ -26,12 +26,21 @@ const sendResponse = (res, responseString) => {
 }
 
 const DeviceServices = async (req, res, devicesData, hubPreferences, usersData) => {
+    
+    if(typeof req?.apiData?.error ) {
+        const errorCode = req?.apiData?.error;
+        const errorMasg = req?.apiData?.message;
+        sendResponse(res, {error: errorCode, message: errorMasg});
+    }
+
     if(typeof req?.query?.data === 'undefined') {
         sendResponse(res, {error: 1, message: 'missing `data` parameter.'});
-    }
+    }    
+
     const action = req.params[0];
     const requestData = stringToObject(req.query.data);
     const hubId = requestData[0][0];
+
     if(typeof hubPreferences[hubId] === 'undefined') {
         hubPreferences[hubId] = {
             mode: 0
@@ -53,19 +62,23 @@ const DeviceServices = async (req, res, devicesData, hubPreferences, usersData) 
      }
 
     const userId = userFromCookie?.id;
+
+    /*
     if( action !== 'get-data') {
         if( typeof userId === 'undefined') {
             console.log("Invalid accessToken");
             sendResponse(res, {error:1, message: "Invalid accessToken"});
             return;
         }
-        if(userFromCookie.accessToken !== usersData[userId].accessToken) {
+
+        if(userFromCookie.accessToken !== usersData[userId]?.accessToken) {
+            debugger;
             console.log("Invalid accessToken");
             sendResponse(res, {error:1, message: "Invalid token"});
             return;
         }
     }
-    //if(userFromCookie.accessToken !== usersData)
+    */
 
     switch(action) {
         case 'get-full-data':
