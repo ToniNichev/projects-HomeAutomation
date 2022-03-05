@@ -46,7 +46,8 @@ class Home extends Component {
     this.DevicesData = apiData.DevicesData;
     this.hubId = apiData.hubId;
     if( typeof window !== 'undefined' && typeof this.hubId === 'undefined') {
-      window.location = '/sign-in';
+      //window.location = '/sign-in';
+      console.log("Undefined Hub Id!");
     }
     // fetch device and weather data
     this.fetching = false;

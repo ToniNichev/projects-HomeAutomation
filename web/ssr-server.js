@@ -117,7 +117,6 @@ app.get('/Robots.txt', (req, res) => {
 // #############################################################
 //  devices services route
 // #############################################################
-
 app.get('/device-services/*',
   function (req, res, next) {
     requestDataFromAPI(req, res, devicesData, usersData, next);

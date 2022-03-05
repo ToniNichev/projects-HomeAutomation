@@ -14,8 +14,7 @@ class PageLayout extends Component {
       let url = this.props.location.pathname;  
 
       if(typeof window === 'undefined') {
-        // server side redirects
-        console.log("server side redirects");
+        // server side 
         if(this.props.apiData?.error === 1 ) {
           // url = '/sign-in';
           this.cookies.remove('user');
@@ -29,8 +28,7 @@ class PageLayout extends Component {
         }
 
       } else {
-        // client side redirects
-        console.log("client side redirects");
+        // client side
         const user =  this.cookies.get('user');
         const hubId = typeof user?.deviceHubs === 'undefined' || user?.deviceHubs.length === 0  ? undefined : user?.deviceHubs[0];
 
@@ -45,7 +43,7 @@ class PageLayout extends Component {
             //location.href = `/home?data=["${hubId}"]`;
           }
         }
-
+        window.__API_DATA__.url = url;
       }
       const page = PageData[url];
 

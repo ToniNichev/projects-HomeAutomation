@@ -73,7 +73,8 @@ const logOut = async (req, res, usersData) => {
   const accessToken = requestObj.accessToken;
   const users = await queries.getUser({email: email });
   const userId = users[0].id;
-  usersData[userId].accessToken = '';
+
+  delete(usersData[userId]);
   if(users.length === 0) {
     sendResponse(res, {error:1, message: 'Username can`t be found!'});  
     return;

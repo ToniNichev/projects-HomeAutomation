@@ -27,15 +27,17 @@ const sendResponse = (res, responseString) => {
 
 const DeviceServices = async (req, res, devicesData, hubPreferences, usersData) => {
     
-    if(typeof req?.apiData?.error ) {
+    if(typeof req?.apiData?.error !== 'undefined' ) {
         const errorCode = req?.apiData?.error;
         const errorMasg = req?.apiData?.message;
         sendResponse(res, {error: errorCode, message: errorMasg});
+        return;
     }
 
     if(typeof req?.query?.data === 'undefined') {
         sendResponse(res, {error: 1, message: 'missing `data` parameter.'});
-    }    
+        return;
+    }   
 
     const action = req.params[0];
     const requestData = stringToObject(req.query.data);

@@ -3,11 +3,7 @@ import queries from "../../src/queries";
 let newDeviceName = "NO NAME";
 
 const sendResponse = (res, responseString) => {
-
   res.status(200);
-  res.removeHeader('X-Powered-By');
-  res.removeHeader('Set-Cookie');
-  res.removeHeader('Connection');
   res.send(responseString);  
 }
 
