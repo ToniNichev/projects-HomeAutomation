@@ -4,7 +4,7 @@
 
 #define ethernetDomain "toni-develops.com"
 #define ethernetUrl "GET /device-services/get-data?data="
-#define ethernetPort 8061
+#define ethernetPort 8085
 
 #define hubId "AXCS12"
 //#define hubId "B2CF62"
