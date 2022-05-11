@@ -24,8 +24,9 @@ EventsManager.registerEvent('unsetSelectedList' ,unsetSelectedList);
 
 
 const Header = ( {title} ) => {
-  const { search } = useLocation();
 
+
+  const { search } = useLocation();
   return (
     <div>
       <div className={styles.wrapper}>      

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styles from './styles.scss';
 import Poster from '../../utils/Poster';
 import { apiUrl } from '../../utils/getParams';
@@ -23,12 +23,48 @@ const dropDatabase = async () => {
   console.log(result);
 }
 
-function Greetings({props}) {
-  return(<div className={styles.wrapper}>
-          <p><button onClick={ () => { dropDatabase() }}>DROP DATABASE</button></p>
-          <p><button onClick={ () => { setupHubsDatabase() }}>CREATE TWO UNREGISTERED HUBS DATABASE</button></p>
-          <p><button onClick={ () => { setupDatabase() }}>CREATE DATABASE</button></p>
-          <p><button onClick={ () => { setupFullDatabase() }}>CREATE AND POPULATE DATABASE</button></p>
-        </div>);
+if(typeof window !== 'undefined') {
+  window.getRegion = () => {
+    return "US";
+  }
 }
-export default Greetings;
+
+
+function Setup() {
+
+  const [notAvailableModalVisible, setNotAvailableModalVisible] = useState(true);
+
+  const notAvailableModalClose = () => {
+    setNotAvailableModalVisible(false);
+    return true;
+  };
+
+  const TestFunc = (txt) => {
+    if(window?.getRegion() === 'US') {
+      return (
+      <div>
+        <h1>{txt}</h1>
+      </div>);
+    } else
+    {
+      return(
+      <div>
+        <h1>OTHER</h1>
+      </div>);    
+    }
+  }
+
+  return(<div className={styles.wrapper}>
+    {TestFunc("TEST 123")}
+    {notAvailableModalVisible && <p>##### SHOW / HIDE #######</p>}
+    <p>Wellcome to the setup page</p>
+    <p><button onClick={ () => { dropDatabase() }}>!!!!DROP DATABASE</button></p>
+    <p><button onClick={ () => { setupHubsDatabase() }}>CREATE TWO UNREGISTERED HUBS DATABASE</button></p>
+    <p><button onClick={ () => { setupDatabase() }}>CREATE DATABASE</button></p>
+    <p><button onClick={ () => { setupFullDatabase() }}>CREATE AND POPULATE DATABASE</button></p>
+    <button onClick={ () => { notAvailableModalClose() }}>SHOW / HIDE</button>
+  </div>);
+}
+
+export { Setup }
+export default Setup;

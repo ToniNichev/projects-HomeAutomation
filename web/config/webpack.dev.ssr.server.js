@@ -107,7 +107,7 @@ module.exports = {
       verbose: true,
       // Node arguments.
       //nodeArgs: [ '--inspect-brk' ]
-      nodeArgs: [ '--inspect' ]
+      //nodeArgs: [ '--inspect' ]
     }),    
   ]
 };

@@ -1,0 +1,48 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Testing Header component renders as expected!!! 1`] = `
+<div>
+  <div>
+    <ul>
+      <li>
+        <Link
+          to="/home?test=123"
+        >
+          DEVICES
+        </Link>
+      </li>
+      <li>
+        <Link
+          to="/account?test=123"
+        >
+          ACCOUNT
+        </Link>
+      </li>
+      <li>
+        <Link
+          to="/setup?test=123"
+        >
+          SETTINGS
+        </Link>
+      </li>
+      <li>
+        <Link
+          to="/about?test=123"
+        >
+          ABOUT
+        </Link>
+      </li>
+      <li>
+        <Link
+          to="/sign-out?test=123"
+        >
+          SIGN OUT
+        </Link>
+      </li>
+    </ul>
+  </div>
+  <Renderer
+    showPopup={false}
+  />
+</div>
+`;

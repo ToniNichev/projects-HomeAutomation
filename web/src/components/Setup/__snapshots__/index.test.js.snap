@@ -1,0 +1,52 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Testing Header component renders as expected! 1`] = `
+<Setup>
+  <div>
+    <div>
+      <h1>
+        TEST 123
+      </h1>
+    </div>
+    <p>
+      ############
+    </p>
+    <p>
+      Wellcome to the setup page
+    </p>
+    <p>
+      <button
+        onClick={[Function]}
+      >
+        !!!!DROP DATABASE
+      </button>
+    </p>
+    <p>
+      <button
+        onClick={[Function]}
+      >
+        CREATE TWO UNREGISTERED HUBS DATABASE
+      </button>
+    </p>
+    <p>
+      <button
+        onClick={[Function]}
+      >
+        CREATE DATABASE
+      </button>
+    </p>
+    <p>
+      <button
+        onClick={[Function]}
+      >
+        CREATE AND POPULATE DATABASE
+      </button>
+    </p>
+    <button
+      onClick={[Function]}
+    >
+      TEST
+    </button>
+  </div>
+</Setup>
+`;

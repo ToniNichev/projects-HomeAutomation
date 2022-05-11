@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testExecutions version="1">
+  <file path="/Users/toninichev/workspace/arduino/homeAutomation/web/src/components/Setup/index.test.js">
+    <testCase name="Testing Header component renders as expected!" duration="42"/>
+    <testCase name="Testing Header component test notAvailableModalClose()" duration="8"/>
+  </file>
+</testExecutions>
