@@ -2,8 +2,8 @@
 #include "EthernetWebClient.h"
 
 #define ethernetDomain "toni-develops.com"
-#define ethernetUrl "GET /thermostat-services/get-data?data="
-#define ethernetPort 8061
+#define ethernetUrl "GET /device-services/get-data?data="
+#define ethernetPort 8085
 #define hubId "AXCS12"
 
 char thermostatsData[100] = ""; 
@@ -16,6 +16,13 @@ void setHubId() {
 
 void setup() {
   Serial.begin(9600);
+
+  // construct the url and append thermostat id
+  if(thermostatsData[0] != '[') {
+    setHubId();
+  }
+
+  
   while (!Serial) {
     ; // wait for serial port to connect. Needed for native USB port only
   }
@@ -24,12 +31,6 @@ void setup() {
 
 void loop() {
   char ethernetURL[150] = "";
-
-  // construct the url and append thermostat id
-  if(thermostatsData[0] != '[') {
-    setHubId();
-  }
-
 
   strcpy(ethernetURL, ethernetUrl);
   strcat(ethernetURL, thermostatsData);

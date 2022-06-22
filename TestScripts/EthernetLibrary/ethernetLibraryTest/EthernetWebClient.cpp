@@ -74,6 +74,7 @@ bool setupEthernetWebClient(char url[100], char Server[100], int ethernetWebClie
         if(ethernetMode == 2) {
           ethernetServerData[ethernetDataBufferLen] = (char)buffer[i];
           ethernetDataBufferLen ++;
+          Serial.println(ethernetServerData);
         }
       }
       
