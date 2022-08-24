@@ -126,3 +126,6 @@ Reset PTAC security code
 ==================================================
 New Amana Thermostat Wiring Harness - PWHK01C
 ==================================================
+
+
+Last updated: 08/24/2022

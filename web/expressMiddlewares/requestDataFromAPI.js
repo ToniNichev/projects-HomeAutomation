@@ -17,7 +17,6 @@ const sendResponse = (res, responseString) => {
 }
 
 const requestDataFromAPI = async (req, res, devicesData, usersData, next) => {
-  console.log("!!!!!!!!!!!!!!!!!");
   let userFromCookie;
   if(typeof req.cookies.user === 'undefined') {
     req.cookies.user  = undefined;
