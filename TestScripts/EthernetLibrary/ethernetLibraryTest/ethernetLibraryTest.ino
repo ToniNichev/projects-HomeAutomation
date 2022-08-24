@@ -2,8 +2,8 @@
 #include "EthernetWebClient.h"
 
 #define ethernetDomain "toni-develops.com"
-#define ethernetUrl "GET /thermostat-services/get-data?data="
-#define ethernetPort 8061
+#define ethernetUrl "GET /device-services/get-data?data="
+#define ethernetPort 8085
 #define hubId "AXCS12"
 
 char thermostatsData[100] = ""; 

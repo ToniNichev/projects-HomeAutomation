@@ -119,6 +119,7 @@ app.get('/Robots.txt', (req, res) => {
 // #############################################################
 app.get('/device-services/*',
   function (req, res, next) {
+    debugger;
     requestDataFromAPI(req, res, devicesData, usersData, next);
   },
   function (req, res, next) {

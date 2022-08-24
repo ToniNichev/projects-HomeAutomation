@@ -36,10 +36,10 @@ Home Authomation project
         http://localhost:8081/home?data=["AXCS12"]      
 
     * prod
-        http://toni-develops.com:8061/home?data=["AXCS12"]
+        http://toni-develops.com:8085/home?data=["AXCS12"]
 
     * setup
-        http://toni-develops.com:8061/setup?data=["AXCS12"]
+        http://toni-develops.com:8085/setup?data=["AXCS12"]
         http://localhost:8081/setup?data=["AXCS12"]
 
 * Services
@@ -50,12 +50,12 @@ Home Authomation project
         ⍑ - thermostat
 
     * Get Full Data
-        http://toni-develops.com:8061/thermostat-services/get-full-data?data=[HUB-ID]
+        http://toni-develops.com:8085/device-services/get-full-data?data=[HUB-ID]
         - get all thermostats data for given hub HUB-ID
-        example: http://toni-develops.com:8061/thermostat-services/get-full-data?data=["AXCS12"]
+        example: http://toni-develops.com:8085/device-services/get-full-data?data=["AXCS12"]
 
     * Get Data
-        http://toni-develops.com:8061/thermostat-services/get-data?data=[HUB-ID][THERMOSTAT-ID,HUMIDITY,TEMPERATURE,MODE]
+        http://toni-develops.com:8085/device-services/get-data?data=[HUB-ID][THERMOSTAT-ID,HUMIDITY,TEMPERATURE,MODE]
         - called from the hub to send thermostat readings (THERMOSTAT-ID, HUMIDITY, TEMPERATURE, MODE),
           and to get
         - web server response (id, requiredTemperature, ThermostatMode, fanMode ):  [0,24,1,0][1,31,1,0]
@@ -63,37 +63,37 @@ Home Authomation project
         - requiredTemperature: the temperature set up with the dialer
         - thermostatMode: 0 - off, 1 - cool, 2 - heat
         - fanMode: 0 - auto, 1 - low speed, 2 - high speed
-        - example call: http://toni-develops.com:8061/thermostat-services/get-data?data=["AXCS12"][0,52.80,28.63,0][1,51.90,28.38,0]
+        - example call: http://toni-develops.com:8085/device-services/get-data?data=["AXCS12"][0,52.80,28.63,0][1,51.90,28.38,0]
 
     * Set desired temperature
-        http://toni-develops.com:8061/thermostat-services/set-desired-temperature?data=["AXCS12"][0,21.0]
+        http://toni-develops.com:8085/device-services/set-desired-temperature?data=["AXCS12"][0,21.0]
 
     * Add new thermostat mode
-        http://toni-develops.com:8061/thermostat-services/add-thermostat?data=[HUB-ID][NEXT-THERMOSTAT-ID]
-        example: http://toni-develops.com:8061/thermostat-services/add-thermostat?data=["AXCS12"][1]
+        http://toni-develops.com:8085/device-services/add-thermostat?data=[HUB-ID][NEXT-THERMOSTAT-ID]
+        example: http://toni-develops.com:8085/device-services/add-thermostat?data=["AXCS12"][1]
         
         * workflow:
             * User click ADD Thermostat on ♁ (web site)
-                ♁(front end) >>> ♁(server) : http://toni-develops.com:8061/thermostat-services/add-thermostat?data=["HUB-ID", "new device name"] 
-                                    example: http://toni-develops.com:8061/thermostat-services/add-thermostat?data=["AXCS12", "new device name"]
+                ♁(front end) >>> ♁(server) : http://toni-develops.com:8085/device-services/add-thermostat?data=["HUB-ID", "new device name"] 
+                                    example: http://toni-develops.com:8085/device-services/add-thermostat?data=["AXCS12", "new device name"]
 
             * hub receives `[#,new-thermostat-id]` from the web service
-                0 | ⌂ >>> ♁ : http://toni-develops.com:8061/thermostat-services/get-data?data=[HUB-ID]
-                    example : http://toni-develops.com:8061/thermostat-services/get-data?data=["AXCS12"]
+                0 | ⌂ >>> ♁ : http://toni-develops.com:8085/device-services/get-data?data=[HUB-ID]
+                    example : http://toni-develops.com:8085/device-services/get-data?data=["AXCS12"]
                     ♁ > ⌂ : [#,0] new thermostat id is '0'
             * hub forwards `[#,new-thermostat-id]` to the thermostat, on chanel `0`, thermostat replies with `["added"]`
                 0 | ⌂ >>> ⍑ : [#,0]
                 0 | ⍑ >>> ⌂ : ["added"]
 
             * hub forwards `["added"]` to the web server, server acknowledges by replying with `[##]` 
-                            http://toni-develops.com:8061/thermostat-services/get-data?data=[HUB-ID]["added"]
-                0 | ⌂ >>> ♁ http://toni-develops.com:8061/thermostat-services/get-data?data=["AXCS12"]["added"]
+                            http://toni-develops.com:8085/device-services/get-data?data=[HUB-ID]["added"]
+                0 | ⌂ >>> ♁ http://toni-develops.com:8085/device-services/get-data?data=["AXCS12"]["added"]
                     ♁ >>> ⌂ : [##]
 
             * hub resumes normal operations
-                0 | ⌂ >>> ♁ http://toni-develops.com:8061/thermostat-services/get-data?data=["AXCS12"][⍑-ID, HUMIDITY, TEMPERATURE, NOT-IN-USE-YET]
+                0 | ⌂ >>> ♁ http://toni-develops.com:8085/device-services/get-data?data=["AXCS12"][⍑-ID, HUMIDITY, TEMPERATURE, NOT-IN-USE-YET]
                     ♁ > ⌂ : [⍑-ID, DESIRED-TEMPERATURE, MODE, FAN-MODE]
-                    example call: http://toni-develops.com:8061/thermostat-services/get-data?data=["AXCS12"][0,52.80,28.63,0][1,51.90,28.38,0]
+                    example call: http://toni-develops.com:8085/device-services/get-data?data=["AXCS12"][0,52.80,28.63,0][1,51.90,28.38,0]
 
 
 * Architecture
@@ -126,3 +126,6 @@ Reset PTAC security code
 ==================================================
 New Amana Thermostat Wiring Harness - PWHK01C
 ==================================================
+
+
+Last updated: 08/24/2022
