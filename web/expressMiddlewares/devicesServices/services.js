@@ -95,6 +95,7 @@ const getReadings = async (req, res, deviceData, deviceResponse, hubPreferences)
     //if(result == '')
       //result = '[]';    
   }
+  //result = '[#,1,2,3]'; // for testing purposes
   sendResponse(res, result);
 }
 
