@@ -1,6 +1,8 @@
 # Home Authomation
 Home Authomation project
 
+Author: Toni Y Nichev.
+
 # PTAC wiring
     *   setting up PTAC in remote terminal mode
         - press and hold +/- then press [off] twise
