@@ -1,5 +1,5 @@
-# Thermostat
-A Smart Thermostat project
+# Home Authomation
+Home Authomation project
 
 # PTAC wiring
     *   setting up PTAC in remote terminal mode
