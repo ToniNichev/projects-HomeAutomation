@@ -28,6 +28,7 @@ const sendResponse = (res, responseString) => {
 const requestDataFromAPI = async (req, res, devicesData, usersData, next) => {
   let userFromCookie;
   let userId;
+  console.log("Beep");
   if(req?.cookies?.user) {  
     try {
       userFromCookie = JSON.parse(req.cookies.user);
