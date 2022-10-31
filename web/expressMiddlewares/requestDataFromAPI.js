@@ -16,28 +16,33 @@ const sendResponse = (res, responseString) => {
   res.send(responseString);  
 }
 
+/**
+ * 
+ * @param {*} req 
+ * @param {*} res 
+ * @param {*} devicesData 
+ * @param {*} usersData 
+ * @param {*} next 
+ * @returns 
+ */
 const requestDataFromAPI = async (req, res, devicesData, usersData, next) => {
   let userFromCookie;
+  let userId;
   if(req?.cookies?.user) {  
     try {
       userFromCookie = JSON.parse(req.cookies.user);
+      userId = userFromCookie?.id;      
     }catch(e) {
       console.log("no user stored in cookie");
     }
   }
   
-  const userId = userFromCookie?.id;
-  if(userId) {
-    // userFromCookie is undefined, will redirect to sign-in page
-    req.apiData = { };
-    req.templateName = 'Html'; 
-    next();
-    return;     
-  }
-  if(!usersData[userId]) {
+  if(!userId) {
     // user is not loaded, get it from DB
-    const userResponse = await queries.getUser({id: userId});
-    if(userResponse.length === 0) {
+    let userResponse;
+    if(userId)
+      userResponse = await queries.getUser({id: userId});
+    if( !userId || userResponse.length === 0) {
       // user can't be found
       req.apiData = { error: 7, message: "Can't find user" };
       req.templateName = 'Html'; 

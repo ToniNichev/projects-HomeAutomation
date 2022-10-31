@@ -39,23 +39,8 @@ function Setup() {
     return true;
   };
 
-  const TestFunc = (txt) => {
-    if(window?.getRegion() === 'US') {
-      return (
-      <div>
-        <h1>{txt}</h1>
-      </div>);
-    } else
-    {
-      return(
-      <div>
-        <h1>OTHER</h1>
-      </div>);    
-    }
-  }
 
   return(<div className={styles.wrapper}>
-    {TestFunc("TEST 123")}
     {notAvailableModalVisible && <p>##### SHOW / HIDE #######</p>}
     <p>Wellcome to the setup page</p>
     <p><button onClick={ () => { dropDatabase() }}>!!!!DROP DATABASE</button></p>

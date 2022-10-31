@@ -119,7 +119,6 @@ app.get('/Robots.txt', (req, res) => {
 // #############################################################
 app.get('/device-services/*',
   function (req, res, next) {
-    debugger;
     requestDataFromAPI(req, res, devicesData, usersData, next);
   },
   function (req, res, next) {
@@ -246,8 +245,8 @@ Loadable.preloadAll().then(() => {
 // #############################################################  
 
 function runWorkers() {
-  console.log("--=== workers ===--");
-  console.log("(w) hubPreferences: ", hubPreferences);
+  //console.log("--=== workers ===--");
+  //console.log("(w) hubPreferences: ", hubPreferences);
   setTimeout(() =>{
     runWorkers();
   }, 1000);
