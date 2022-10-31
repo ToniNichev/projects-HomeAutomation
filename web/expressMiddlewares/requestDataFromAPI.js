@@ -31,18 +31,17 @@ const requestDataFromAPI = async (req, res, devicesData, usersData, next) => {
   if(req?.cookies?.user) {  
     try {
       userFromCookie = JSON.parse(req.cookies.user);
-      userId = userFromCookie?.id;      
+      userId = userFromCookie?.id;
+      usersData[userId] = userFromCookie;  
     }catch(e) {
       console.log("no user stored in cookie");
     }
   }
   
   if(!userId) {
-    // user is not loaded, get it from DB
-    let userResponse;
-    if(userId)
-      userResponse = await queries.getUser({id: userId});
-    if( !userId || userResponse.length === 0) {
+    // get user from the DB if not present in cookies
+    const userResponse = await queries.getUser({id: userId});
+    if( userResponse.length === 0) {
       // user can't be found
       req.apiData = { error: 7, message: "Can't find user" };
       req.templateName = 'Html'; 
