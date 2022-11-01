@@ -26,9 +26,10 @@ const sendResponse = (res, responseString) => {
  * @returns 
  */
 const requestDataFromAPI = async (req, res, devicesData, usersData, next) => {
+
+  /*
   let userFromCookie;
   let userId;
-  console.log("Beep");
   if(req?.cookies?.user) {  
     try {
       userFromCookie = JSON.parse(req.cookies.user);
@@ -58,22 +59,13 @@ const requestDataFromAPI = async (req, res, devicesData, usersData, next) => {
     next();
     return;
   }
-  
-  
-  
-  /*
-  if(typeof userFromCookie !== 'undefined') {
-    // add user
-    const userId = userFromCookie.id;
-    usersData[userId] = userFromCookie;
-  }
   */
   
   req.parsedUrl = url.parse(req.url);
   const pathname = req.parsedUrl.pathname;  
   const parsedQs = querystring.parse(req.parsedUrl.query);
   
-  if(pathname === '/setup' || typeof parsedQs.data === 'undefined') {
+  if(pathname === '/setup') {
     // shortcut to run setup without credentials !!! REMOVE IT ONCE DONE !
     req.templateName = 'Html'; 
     req.apiData = {};
@@ -81,10 +73,12 @@ const requestDataFromAPI = async (req, res, devicesData, usersData, next) => {
     return;
   }
   
-  if(typeof parsedQs.data === 'undefined') {
+  if(!parsedQs.data) {
     console.log("#####################################################################");
     console.log("ERROR ! NO `data` Query String Param!!!");
     console.log("#####################################################################");
+    next();
+    return;
   }
   
   const validDataObj = stringToObject(parsedQs.data); // device(s) ids
@@ -100,8 +94,9 @@ const requestDataFromAPI = async (req, res, devicesData, usersData, next) => {
   }
   
   const hubId = validDataObj[0][0];
-  const isValidHubIdForThisUser = userFromCookie?.deviceHubs?.find(element => element === hubId);
   
+  /*
+  const isValidHubIdForThisUser = userFromCookie?.deviceHubs?.find(element => element === hubId);
   if(typeof isValidHubIdForThisUser === 'undefined' && typeof userFromCookie !== 'undefined') {
     // user does not have this device ID
     req.error = {
@@ -110,6 +105,7 @@ const requestDataFromAPI = async (req, res, devicesData, usersData, next) => {
     req.templateName = 'InternalError';
   }
   else {  
+  */
     req.fullData = validDataObj;
     req.hubId = hubId;
     if(typeof devicesData[hubId] === 'undefined') {
@@ -122,9 +118,8 @@ const requestDataFromAPI = async (req, res, devicesData, usersData, next) => {
     req.apiData = {"hubId": hubId, "devicesData" : devicesData[hubId]};
     const templateName = typeof PageData[pathname] != 'undefined' ? PageData[pathname].template : '';    
     req.templateName = templateName;
-  }
-  next(); // continue once the data is available.
-  
+
+  next();  
 }
 
 export default requestDataFromAPI;
