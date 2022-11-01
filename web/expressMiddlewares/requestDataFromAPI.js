@@ -16,31 +16,34 @@ const sendResponse = (res, responseString) => {
   res.send(responseString);  
 }
 
+/**
+ * 
+ * @param {*} req 
+ * @param {*} res 
+ * @param {*} devicesData 
+ * @param {*} usersData 
+ * @param {*} next 
+ * @returns 
+ */
 const requestDataFromAPI = async (req, res, devicesData, usersData, next) => {
+
+  /*
   let userFromCookie;
-  if(typeof req.cookies.user === 'undefined') {
-    req.cookies.user  = undefined;
-  }
-  else {
+  let userId;
+  if(req?.cookies?.user) {  
     try {
       userFromCookie = JSON.parse(req.cookies.user);
+      userId = userFromCookie?.id;
+      usersData[userId] = userFromCookie;  
     }catch(e) {
-      req.cookies.user  = undefined;
+      console.log("no user stored in cookie");
     }
   }
   
-  const userId = userFromCookie?.id;
-  if(typeof userId === 'undefined') {
-    // userFromCookie is undefined, will redirect to sign-in page
-    req.apiData = { };
-    req.templateName = 'Html'; 
-    next();
-    return;     
-  }
-  if(typeof usersData[userId] === 'undefined' ) {
-    // user is not loaded, get it from DB
+  if(!userId) {
+    // get user from the DB if not present in cookies
     const userResponse = await queries.getUser({id: userId});
-    if(userResponse.length === 0) {
+    if( userResponse.length === 0) {
       // user can't be found
       req.apiData = { error: 7, message: "Can't find user" };
       req.templateName = 'Html'; 
@@ -56,22 +59,13 @@ const requestDataFromAPI = async (req, res, devicesData, usersData, next) => {
     next();
     return;
   }
-  
-  
-  
-  /*
-  if(typeof userFromCookie !== 'undefined') {
-    // add user
-    const userId = userFromCookie.id;
-    usersData[userId] = userFromCookie;
-  }
   */
   
   req.parsedUrl = url.parse(req.url);
   const pathname = req.parsedUrl.pathname;  
   const parsedQs = querystring.parse(req.parsedUrl.query);
   
-  if(pathname === '/setup' || typeof parsedQs.data === 'undefined') {
+  if(pathname === '/setup') {
     // shortcut to run setup without credentials !!! REMOVE IT ONCE DONE !
     req.templateName = 'Html'; 
     req.apiData = {};
@@ -79,10 +73,12 @@ const requestDataFromAPI = async (req, res, devicesData, usersData, next) => {
     return;
   }
   
-  if(typeof parsedQs.data === 'undefined') {
+  if(!parsedQs.data) {
     console.log("#####################################################################");
     console.log("ERROR ! NO `data` Query String Param!!!");
     console.log("#####################################################################");
+    next();
+    return;
   }
   
   const validDataObj = stringToObject(parsedQs.data); // device(s) ids
@@ -98,8 +94,9 @@ const requestDataFromAPI = async (req, res, devicesData, usersData, next) => {
   }
   
   const hubId = validDataObj[0][0];
-  const isValidHubIdForThisUser = userFromCookie?.deviceHubs?.find(element => element === hubId);
   
+  /*
+  const isValidHubIdForThisUser = userFromCookie?.deviceHubs?.find(element => element === hubId);
   if(typeof isValidHubIdForThisUser === 'undefined' && typeof userFromCookie !== 'undefined') {
     // user does not have this device ID
     req.error = {
@@ -108,6 +105,7 @@ const requestDataFromAPI = async (req, res, devicesData, usersData, next) => {
     req.templateName = 'InternalError';
   }
   else {  
+  */
     req.fullData = validDataObj;
     req.hubId = hubId;
     if(typeof devicesData[hubId] === 'undefined') {
@@ -120,9 +118,8 @@ const requestDataFromAPI = async (req, res, devicesData, usersData, next) => {
     req.apiData = {"hubId": hubId, "devicesData" : devicesData[hubId]};
     const templateName = typeof PageData[pathname] != 'undefined' ? PageData[pathname].template : '';    
     req.templateName = templateName;
-  }
-  next(); // continue once the data is available.
-  
+
+  next();  
 }
 
 export default requestDataFromAPI;

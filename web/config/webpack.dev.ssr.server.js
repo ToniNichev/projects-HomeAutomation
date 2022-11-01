@@ -101,12 +101,12 @@ module.exports = {
     new webpack.DefinePlugin({ 'process.env' : getEnvironmentConstants() } ),  
 
     new NodemonPlugin({
-      watch: path.resolve('./dist'),
+      watch: path.resolve('./server-build'),
       ext: 'js,json,jsx',
       script: `./server-build/server-bundle.js`,
       verbose: true,
       // Node arguments.
-      nodeArgs: [ '--inspect-brk' ]
+      //nodeArgs: [ '--inspect-brk' ]
       //nodeArgs: [ '--inspect' ]
     }),    
   ]

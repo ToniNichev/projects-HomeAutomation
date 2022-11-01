@@ -39,7 +39,12 @@ class Home extends Component {
       messagePopupText: '',      
       flagEditable: false,
       deviceBodyCSS: [],
-      Devices: []
+      Devices: [],
+      // weather data
+      icon: '01d',
+      outsideTemp: 0,
+      feelsLike: 0,
+      humidity: 0,
     };
     // get api data
     const apiData = typeof global.__API_DATA__ !== 'undefined' ? global.__API_DATA__ : typeof window === 'undefined' ? {} : window.__API_DATA__;
@@ -107,13 +112,8 @@ class Home extends Component {
         const maxTemp = data.main.temp_max;
         const pressure = data.main.pressure;
         //const windSpeed = data.main.wind.speed;
-        document.querySelector('.weatherTitle').innerHTML = 
-          `<div>
-            <img src='weather/icons/${icon}.png' />
-          </div> 
-          <p>outside: <span>${outsideTemp} °C</span>" feels like: <span>${feelsLike} °C</span> humidity: <span>${humidity}</span></p>        
-          `;
-
+        this.setState({icon});
+        this.setState({outsideTemp, feelsLike, humidity, minTemp, maxTemp, pressure});
         setTimeout( () => {
           this.fetchWeatherData();
         }, refreshRate);        
@@ -131,7 +131,7 @@ class Home extends Component {
       }, refreshRate);
       return;
     }
-    console.log("fetch ...");
+
     fetch(`${process.env.APP_HOST}:${process.env.SERVER_PORT}/device-services/get-full-data?data=["${this.hubId}"]`)
       .then(response => response.json())
       .then(data => { 
@@ -210,11 +210,20 @@ class Home extends Component {
 
   render() {
     const Devices = this.DevicesData;
-
+    const weatherIcon = `weather/icons/${this.state.icon}.png`;
     return (
       <div className={styles.wrapper}>
           <div className={styles.leftRail}>
-            <div className={[styles.weatherTitle, 'weatherTitle'].join(' ')}>...</div>
+            <div className={[styles.weatherTitle, 'weatherTitle'].join(' ')}>
+              <div>
+                <img src={weatherIcon} />
+              </div> 
+              <p>
+                outside: <span>{this.state.outsideTemp} °C</span>
+                feels like: <span>{this.state.feelsLike} °C</span>
+                humidity: <span>{this.state.humidity} %</span>
+              </p>    
+            </div>
             <div className={styles.rightRail}>
               <button className={this.state.flagEditable ? styles.addButtonHidden : styles.addButtonVisible } onClick={() => { this.addFlag()} }>ADD</button>
               <EditDelete flagEditable={ this.state.flagEditable } editFlag={ () => { this.editFlag() } } hubId={ this.hubId } />
