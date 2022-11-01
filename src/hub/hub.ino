@@ -65,7 +65,6 @@ void loop() {
   // add hub ID
   setHubId();
       
-  char data[32] = "";  
   short int deviceId = 0; // starting from first device
   short int communicationChannel;
   int pos = 0;
@@ -104,6 +103,7 @@ void loop() {
     // #########################
     Serial.print("programMode: ");
     Serial.println(programMode);
+    char data[32] = "";  
     
     for(int i = 0; i < 100; i ++) {      
       if(serverData[i] == '\0') {
