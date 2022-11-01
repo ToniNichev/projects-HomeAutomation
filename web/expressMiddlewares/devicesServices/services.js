@@ -10,7 +10,7 @@ const sendResponse = (res, responseString) => {
 const validateAccessToken = () => {}
 
 const getDeviceListFromDB = async (hubId) => {
-  const response = await queries.getdeviceDataForHubId(hubId);
+  const response = await queries.getDevicesBySearchTerm( {hubId} );
   return response;
 }
 
@@ -152,7 +152,7 @@ const deleteDevice = async (req, res, deviceData, requestData, hubPreferences) =
         queries.remove({ deviceId: tId }, );        
     }
 }
-  deviceData = await queries.getdeviceDataForHubId(hubId);
+  deviceData = await queries.getDevicesBySearchTerm({hubId});
   const result = `{"status": "deleted"}`;
   sendResponse(res, result);
 }
