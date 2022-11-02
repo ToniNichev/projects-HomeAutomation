@@ -65,8 +65,7 @@ const requestDataFromAPI = async (req, res, devicesData, usersData, next) => {
   const pathname = req.parsedUrl.pathname;  
   const parsedQs = querystring.parse(req.parsedUrl.query);
   
-  if(pathname === '/setup') {
-    // shortcut to run setup without credentials !!! REMOVE IT ONCE DONE !
+  if(pathname === '/setup' || pathname === '/sign-in') {
     req.templateName = 'Html'; 
     req.apiData = {};
     next();
