@@ -14,7 +14,7 @@ void setup() {
   }
   Serial.println();
   Serial.println("PROGRAM STARTED");  
-  RFCommunicatorSetup(chanel, chanel + 1);
+  RFCommunicatorSetup(chanel, chanel - 1);
 }
 
 void loop() {

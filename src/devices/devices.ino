@@ -32,10 +32,12 @@ short int deviceMode = 0;
 
 
 void setup() {  
-
-  
   
   Serial.begin(9600);
+  while (!Serial) {
+    ; // wait for serial port to connect. Needed for native USB port only
+  } 
+    
   dht.begin();
   // set up 4 relay pins
   pinMode(RELAY_FAN_LOW, OUTPUT);
@@ -53,14 +55,10 @@ void setup() {
   digitalWrite(RELAY_COOL, HIGH);
   digitalWrite(RELAY_HEAT, HIGH);
   
-  while (!Serial) {
-    ; // wait for serial port to connect. Needed for native USB port only
-  } 
+
   Serial.println(""); 
   Serial.println("#############################################");
   Serial.println("⍑ STARTING ...");
-
-  //writeIntIntoEEPROM(DEVICE_EPROM_ADDRESS, -1);  // !!!  force to set up device in ADD device mode !!!!
   
   short int Id = readIntFromEEPROM(DEVICE_EPROM_ADDRESS);
   if(Id == -1) {
@@ -78,19 +76,24 @@ void setup() {
     Serial.println(communicationChannel);
     Serial.println("#############################################");
   }
-
-  for(int q = 0; q < 10; q ++) {
-    digitalWrite(LED_BUILTIN, HIGH);   // turn the LED on 
-    delay(500);                       // wait for half a second
-    digitalWrite(LED_BUILTIN, LOW);    // turn the LED off 
-    delay(500); 
-  }  
 }
 
 
 
 void loop() {
   delay(200);
+  Serial.println("loop ....");
+  Serial.println("");
+
+  if(Serial.available()) {
+    char input = Serial.read();
+    if(input == '1') {
+      // passing '1' to the serial port will reset thermostat in ADD mode
+      Serial.println("Resetting ⍑ in ADD mode");
+      writeIntIntoEEPROM(DEVICE_EPROM_ADDRESS, -1);  // !!!  force to set up device in ADD device mode !!!!
+      delay(3000);
+    }
+  }  
 
   if(digitalRead(RESET_PIN) == 1) {
     Serial.println("Resetting ....");
@@ -103,16 +106,13 @@ void loop() {
     }
   }
 
-  
-  Serial.println();
-  Serial.println();
-
-  Serial.print(communicationChannel);
-  Serial.print(" | ⍑ ... ⌂");
-  Serial.println(); 
-
   char serverData[32] = "";
-  RFCommunicatorListen(serverData, false);
+  bool res = RFCommunicatorListen(serverData, false); // Listen forever till receive data from the hub
+  Serial.print(">>RES >>");
+  Serial.print(res);
+  Serial.print(">>>>");
+  Serial.print(serverData);
+  Serial.println("");
   printToSerial(communicationChannel, serverData, true);
   delay(1500);
 
@@ -126,7 +126,7 @@ void loop() {
     Serial.print("Received NEW ⍑ ID: ");
     Serial.println(id);
     writeIntIntoEEPROM(DEVICE_EPROM_ADDRESS, id);    
-    delay(100);    
+    delay(1000);    
     char msgToServer[32] = "[\"added\"]";
     RFCommunicatorSend(msgToServer);
     Serial.println("msg sent!");
@@ -137,6 +137,7 @@ void loop() {
   else if(programMode == 2) {
     Serial.println("do nothing ...");
     delay(2000);
+    programMode = 0;
   }
   else {
     // ###########################
