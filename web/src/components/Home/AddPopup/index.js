@@ -1,8 +1,6 @@
 import React, { useState, useEffect, useRef }  from 'react';
 import styles from './styles.scss';
 import { deviceApiUrl } from '../../../utils/getParams';
-import EventsManager from  '../../../containers/EventsManager';
-import {Poster} from '../../../utils/Poster';
 
 let mode = 0;
 
@@ -15,10 +13,10 @@ const AddPopup = ({closePopup, newDeviceAdded, deviceAddedClear}) => {
   const mounted = useRef(false);
 
   useEffect(() => {
-    setInterval( () => {
-       console.log('mode :', mode);
+    setInterval( () => {      
       if (!mounted.current) 
         return;      
+
       if(mode == 2 && newDeviceAdded()) {
         setMsg('New device was successfuly added!');
         setButtonText('DONE');   
@@ -31,11 +29,23 @@ const AddPopup = ({closePopup, newDeviceAdded, deviceAddedClear}) => {
     return () => (mounted.current = false);
 });
 
-  const addFlag = () => {
+  const addNewDevice = () => {
     const apiData = typeof global.__API_DATA__ !== 'undefined' ? global.__API_DATA__ : window.__API_DATA__;
     const hubId = apiData.hubId;
 
-    if(mode == 1) {      
+    if(mode == 0) {
+      mode = 1;
+      const deviceName = document.querySelector("#popup-device-name").value;
+      const url = `${deviceApiUrl}/add-device?data=["${hubId}", "${deviceName}"]`;
+      fetch(url)
+        .then(response => response.json())
+        .then(data => { 
+          setMsg('Looking for the new device ...');
+          setButtonText('CANCEL');
+          mode = 2;
+      });
+    }    
+    else if(mode == 1) {      
       // waiting to finish fetch from mode 0
     }
     if(mode == 2) {
@@ -69,17 +79,6 @@ const AddPopup = ({closePopup, newDeviceAdded, deviceAddedClear}) => {
       setMsg('...');
       setButtonText('ADD DEVICE');      
       closePopup();     
-    }    
-    else if(mode == 0) {
-      mode = 1;
-      const deviceName = document.querySelector("#popup-device-name").value;
-      fetch(`${deviceApiUrl}/add-device?data=["${hubId}", "${deviceName}"]`)
-        .then(response => response.json())
-        .then(data => { 
-          setMsg('Looking for the new device ...');
-          setButtonText('CANCEL');
-          mode = 2;
-      });
     }
   }
   
@@ -91,7 +90,7 @@ const AddPopup = ({closePopup, newDeviceAdded, deviceAddedClear}) => {
         <div className={styles.flagProperties}>
           <p>{msg}</p>
           <p><input id="popup-device-name" type="text" defaultValue="new device name"/></p>
-          <p><button onClick={ () => { addFlag() } }>{buttonText}</button></p>
+          <p><button onClick={ () => { addNewDevice() } }>{buttonText}</button></p>
         </div>          
       </div>      
     </div>

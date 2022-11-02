@@ -1,15 +1,11 @@
 import React, {Component} from 'react';
 import styles from './styles.scss';
-import ToggleSwitch from '../ToggleSwitch';
 import BulletPoint from '../BulletPoint';
 import AddPopup from './AddPopup';
 import MessagePopup from '../MessagePopup';
-import {Poster} from '../../utils/Poster';
 import EditDelete from '../EditDelete';
-import { apiUrl } from '../../utils/getParams';
 import Dialer from '../Dialer';
 import RangeSlider from '../RangeSlider';
-import TemperatureBar from '../TemperatureBar';
 import Cookies from 'universal-cookie';
 const {WEATHER_API_URL} = process.env;
 import EventsManager from  '../../containers/EventsManager';
