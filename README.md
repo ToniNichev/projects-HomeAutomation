@@ -35,21 +35,21 @@ Author: Toni Y Nichev.
   Y/W1  |  W2 |   GL     |     GH   |
 # Web App
     * dev
-        http://localhost:8081/home?data=["AXCS12"]      
+        http://localhost:8085/home?data=["AXCS12"]      
 
     * prod
         http://toni-develops.com:8085/home?data=["AXCS12"]
 
     * setup
         http://toni-develops.com:8085/setup?data=["AXCS12"]
-        http://localhost:8081/setup?data=["AXCS12"]
+        http://localhost:8085/setup?data=["AXCS12"]
 
 * Services
 
     * Legend:
         ♁ - web site
         ⌂ - hub
-        ⍑ - thermostat
+        ⍑ - devices (thermostats)
 
     * Get Full Data
         http://toni-develops.com:8085/device-services/get-full-data?data=[HUB-ID]
