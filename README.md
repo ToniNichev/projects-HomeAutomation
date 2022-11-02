@@ -33,6 +33,7 @@ Author: Toni Y Nichev.
    IN3  | IN4 |    IN1   |    IN2   |
 -------------------------------------
   Y/W1  |  W2 |   GL     |     GH   |
+
 # Web App
     * dev
         http://localhost:8081/home?data=["AXCS12"]      
@@ -130,5 +131,6 @@ New Amana Thermostat Wiring Harness - PWHK01C
 ==================================================
 
 ==================================================
-Last updated: 08/24/2022
+Arduino app log
 ==================================================
+

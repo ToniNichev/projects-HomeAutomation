@@ -14,6 +14,7 @@ char devicesData[100] = "";
 short int programMode = 0;
 
 void setHubId() {
+  memset(devicesData, 0, sizeof devicesData);
   strcpy(devicesData, "[\"");
   strcat(devicesData, hubId);  
   strcat(devicesData, "\"]");  
@@ -62,7 +63,7 @@ void loop() {
   Serial.print(serverData);
   Serial.println();
 
-  // add hub ID
+  // add hub ID and truncate ethernetURL
   setHubId();
       
   short int deviceId = 0; // starting from first device
@@ -88,6 +89,7 @@ void loop() {
       delay(100);
       Serial.println("(adding device) waiting for ⍑ response ...");
       char tempTwo[32] = "";
+      delay(200);
       RFCommunicatorListen(tempTwo, false);
       Serial.print("0 | ⍑ >>> ⌂ : ");
       Serial.println(tempTwo);

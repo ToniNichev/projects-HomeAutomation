@@ -4,7 +4,8 @@
 
 int q = 0;
 short int id = 0;
-
+int chanel = (id * 2) + 1;
+    
 void setup() {
   Serial.begin(9600);
   while (!Serial) {
@@ -18,8 +19,8 @@ void loop() {
   id = 0;
   while(id != 2) { 
     // set up communication chanel
-    int chanel = (id * 2) + 1;
-    RFCommunicatorSetup(chanel + 1, chanel);
+;
+    RFCommunicatorSetup(chanel - 1, chanel);
     char msg[32];
     sprintf(msg, "receiver %d", id);  
     Serial.println("=============================");
