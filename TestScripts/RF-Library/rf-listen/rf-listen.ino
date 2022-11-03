@@ -19,17 +19,22 @@ void setup() {
 
 void loop() {
   // LISTEN
-  Serial.print("Listening ...");
+  Serial.println("Listening ...");
   char data[32];
-  RFCommunicatorListen(data, false);
-  Serial.println(data); 
+  //while(data == "") {
+    while(data[0] == 0) {
+      RFCommunicatorListen(data, false);
+    }
+  Serial.print("data: ");
+  Serial.print(data); 
+  Serial.println();
 
   // SEND  
   delay(100);
   const char msg[32];
   sprintf(msg, "thermostat %d - %d", id, q);
   RFCommunicatorSend(msg);
-
+  memset(data, 0, sizeof memset);
 
   delay(1000);
   q++;
