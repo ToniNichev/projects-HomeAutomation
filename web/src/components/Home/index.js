@@ -266,7 +266,7 @@ class Home extends Component {
                 </div>);}
               )}
           </div>      
-          {this.state.addFlagVisible ? <AddPopup newDeviceAdded={ () =>{ return this.isNewDeviceAdded() } } eviceAddedClear={ () => { this.deviceAddedClear() } } closePopup={ () => { this.closePopup() } } /> : null}
+          {this.state.addFlagVisible ? <AddPopup newDeviceAdded={ () =>{ return this.isNewDeviceAdded() } } deviceAddedClear={ () => { this.deviceAddedClear() } } closePopup={ () => { this.closePopup() } } /> : null}
           {this.state.messagePopup ? <MessagePopup msg={ this.state.messagePopupText } closeMessagePopup = { () =>{ this.closeMessagePopup() } } />: null }
       </div>
     );

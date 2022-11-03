@@ -6,7 +6,7 @@ let mode = 0;
 
 const AddPopup = ({closePopup, newDeviceAdded, deviceAddedClear}) => {  
 
-  const [msg, setMsg] = useState('ADD DEVICE NAME');
+  const [msg, setMsg] = useState('ADD DEVICE');
   const [buttonText, setButtonText] = useState('ADD DEVICE');  
   //const [isMounted, setIsMounted] = useState(false);
 
@@ -40,7 +40,7 @@ const AddPopup = ({closePopup, newDeviceAdded, deviceAddedClear}) => {
       fetch(url)
         .then(response => response.json())
         .then(data => { 
-          setMsg('Looking for the new device ...');
+          setMsg('Looking for the new device. Make sure that the device is in ADD mode.');
           setButtonText('CANCEL');
           mode = 2;
       });

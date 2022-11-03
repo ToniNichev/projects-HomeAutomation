@@ -9,7 +9,7 @@ const deleteFlag = (hubId, deletelist, editFlag) => {
   .then(response => response.json())
   .then(data => {
 
-    EventsManager.callEvent('devices-deleted')();
+    EventsManager.callEvent('Devices-deleted')();
     editFlag();
   });  
 }

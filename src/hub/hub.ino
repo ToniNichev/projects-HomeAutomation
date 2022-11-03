@@ -69,11 +69,8 @@ void loop() {
   short int deviceId = 0; // starting from first device
   short int communicationChannel;
   int pos = 0;
-
   if(serverData[1] == '#') {
-    // #########################
-    // add device hub mode
-    // #########################    
+    // add device hub mode 
     if(serverData[2] == '#') {
       programMode = 0;
     }
@@ -90,6 +87,8 @@ void loop() {
       Serial.println("(adding device) waiting for ⍑ response ...");
       char tempTwo[32] = "";
       delay(200);
+      int cc = 0;
+
       while(tempTwo[0] == 0) {
         RFCommunicatorListen(tempTwo, false);
       }
@@ -102,11 +101,7 @@ void loop() {
     }
   }
   else {
-    // #########################
     // regular hub mode
-    // #########################
-    Serial.print("programMode: ");
-    Serial.println(programMode);
     char data[32] = "";  
     
     for(int i = 0; i < 100; i ++) {      
@@ -131,7 +126,7 @@ void loop() {
           strcat(devicesData, temp);
         }
         else {
-          Serial.println(" ..... Timed out .....");
+          Serial.println("Timed out .....");
         }
 
 
