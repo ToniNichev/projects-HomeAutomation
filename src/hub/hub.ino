@@ -90,8 +90,10 @@ void loop() {
       Serial.println("(adding device) waiting for ⍑ response ...");
       char tempTwo[32] = "";
       delay(200);
-      RFCommunicatorListen(tempTwo, false);
-      Serial.print("0 | ⍑ >>> ⌂ : ");
+      while(tempTwo[0] == 0) {
+        RFCommunicatorListen(tempTwo, false);
+      }
+      Serial.print("0 | ⍑ >>> ⌂ (device response) : ");
       Serial.println(tempTwo);
       strcat(devicesData, tempTwo);
       programMode = 0;
