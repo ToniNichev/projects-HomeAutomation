@@ -22,7 +22,7 @@ void loop() {
 ;
     RFCommunicatorSetup(chanel - 1, chanel);
     char msg[32];
-    sprintf(msg, "receiver %d", id);  
+    sprintf("receiver %d", id);  
     Serial.println("=============================");
     Serial.println(msg);
     Serial.println("_____________________________");  
@@ -31,17 +31,20 @@ void loop() {
     const char text[32];
     sprintf(text, "hello world %d", q);
     RFCommunicatorSend(text);
-    Serial.println("Sending ...");
+    Serial.print("Sending :");
+    Serial.print(q);
+    Serial.println();
     
     // # 3 - receive
     Serial.println("Listening ...");
     char data[32];
     
     if(RFCommunicatorListen(data, true)) {
-      Serial.println("TIMEOUT !!!!!!!!!!!!!!!!!!");
+      Serial.println("TIMEOUT ....");
     } else {
       char textTwo[32] = "";
-      Serial.println(data);    
+      Serial.print("received data: ");
+      Serial.print(data);    
     }
     
   
