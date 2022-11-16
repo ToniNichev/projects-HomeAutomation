@@ -77,8 +77,8 @@ Author: Toni Y Nichev.
         
         * workflow:
             * User click ADD Thermostat on ♁ (web site)
-                ♁(front end) >>> ♁(server) : http://toni-develops.com:8085/device-services/add-thermostat?data=["HUB-ID", "new device name"] 
-                                    example: http://toni-develops.com:8085/device-services/add-thermostat?data=["AXCS12", "new device name"]
+                ♁(front end) >>> ♁(server) : http://toni-develops.com:8085/device-services/add-device?data=["HUB-ID", "new device name"] 
+                                    example: http://toni-develops.com:8085/device-services/add-device?data=["AXCS12", "Living room thermostat"]
 
             * hub receives `[#,new-thermostat-id]` from the web service
                 0 | ⌂ >>> ♁ : http://toni-develops.com:8085/device-services/get-data?data=[HUB-ID]
