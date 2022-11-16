@@ -4,6 +4,8 @@
 #include <DHT.h>
 #include <EEPROM.h>
 
+#define DEVICE_TYPE 1 // 1 - Therrmostat, 2 - Proximity sensor
+
 #define RELAY_FAN_LOW 7
 #define RELAY_FAN_HIGH 6
 #define RELAY_COOL 5
@@ -59,6 +61,7 @@ void setup() {
   Serial.println(""); 
   Serial.println("#############################################");
   Serial.println("⍑ STARTING ...");
+  delay(3000);
   
   short int Id = readIntFromEEPROM(DEVICE_EPROM_ADDRESS);
   if(Id == -1) {
@@ -107,12 +110,10 @@ void loop() {
   }
 
   char serverData[32] = "";
-  bool res = RFCommunicatorListen(serverData, false); // Listen forever till receive data from the hub
-  Serial.print(">>RES >>");
-  Serial.print(res);
-  Serial.print(">>>>");
-  Serial.print(serverData);
-  Serial.println("");
+  memset(serverData, 0, sizeof serverData);
+  while(serverData[0] == 0) {
+    RFCommunicatorListen(serverData, false); // Listen forever till receive data from the hub
+  }
   printToSerial(communicationChannel, serverData, true);
   delay(1500);
 
@@ -126,10 +127,13 @@ void loop() {
     Serial.print("Received NEW ⍑ ID: ");
     Serial.println(id);
     writeIntIntoEEPROM(DEVICE_EPROM_ADDRESS, id);    
-    delay(1000);    
-    char msgToServer[32] = "[\"added\"]";
+    delay(2000);    
+    char msgToServer[32] = {0};
+    sprintf(msgToServer, "[\"added\"][%d]", DEVICE_TYPE);
     RFCommunicatorSend(msgToServer);
-    Serial.println("msg sent!");
+    Serial.print("msg sent to the hub: ");
+    Serial.print(msgToServer);
+    Serial.println();
     delay(200);
     programMode = 0;
     RFCommunicatorSetup(3,2); // switch to regular communication channel.
