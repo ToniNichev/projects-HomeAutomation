@@ -48,6 +48,7 @@ const getReadings = async (req, res, deviceData, deviceResponse, hubPreferences)
         "userId": userId,
         "deviceName" : newDeviceName,
         "hubId": hubId,
+        "deviceType": req.fullData[2][0],
         "group": "My home",        
         "humidity": "0",
         "curentTemp": "0",
