@@ -70,7 +70,7 @@ void loop() {
   short int communicationChannel;
   int pos = 0;
   if(serverData[1] == '#') {
-    // add device hub mode 
+    // add device mode 
     if(serverData[2] == '#') {
       programMode = 0;
     }
@@ -139,8 +139,8 @@ void loop() {
     
   }
   Serial.println();
-  Serial.println("delaying 1 sec before the next cycle ...");
-  delay(1000);
+  Serial.println("delaying 0.5 sec before the next cycle ...");
+  delay(500);
 } 
   
 
