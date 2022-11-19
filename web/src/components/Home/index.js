@@ -178,6 +178,7 @@ class Home extends Component {
 
   disableFetch = (mode) => {
     this.disableFetchData = mode;
+    this.fetching = false;
   }
 
   onChangeTemperatureCallback = (deviceId, requiredTemperature) => {

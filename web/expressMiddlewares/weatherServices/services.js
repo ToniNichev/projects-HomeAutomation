@@ -37,7 +37,6 @@ const getLocalWeather = async (req, res) => {
     sendResponse(res, cachedResponse);
   }
   else {
-    console.log(">>>>>> Updating weather data !");
     const response = await fetchWeatherData();
     const responseStr = await response.json();    
     cachedResponse = responseStr;
