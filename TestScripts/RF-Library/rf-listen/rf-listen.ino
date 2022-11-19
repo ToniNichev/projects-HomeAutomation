@@ -36,6 +36,6 @@ void loop() {
   RFCommunicatorSend(msg);
   memset(data, 0, sizeof memset);
 
-  delay(1000);
+  delay(100);
   q++;
 }
